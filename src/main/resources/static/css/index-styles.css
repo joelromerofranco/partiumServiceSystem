@@ -1,0 +1,193 @@
+@import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap');
+
+:root {
+    --primary-color: #2c3e50; /* Azul muy oscuro para el Sidebar */
+    --primary-hover: #34495e; /* Sidebar hover */
+    --accent-color: #0088cc; /* Color alegre para resaltar */
+    --bg-color: #f4f7f6; /* Fondo grisáceo suave */
+    --sidebar-width: 250px;
+    --sidebar-collapsed-width: 70px;
+    --text-color: #333;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    display: flex;
+    height: 100vh;
+    overflow: hidden; /* Evitar scrolls innecesarios globalmente */
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+    width: var(--sidebar-width);
+    background-color: var(--primary-color);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    transition: width 0.3s ease; /* Animación de despliegue/pliegue */
+    overflow: hidden; /* Ocultar texto largo cuando colapsa */
+}
+
+.sidebar.collapsed {
+    width: var(--sidebar-collapsed-width);
+}
+
+.sidebar-header {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
+    background-color: #1a252f;
+    border-bottom: 1px solid #34495e;
+}
+
+.sidebar-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    white-space: nowrap;
+    opacity: 1;
+    transition: opacity 0.3s;
+}
+
+.sidebar.collapsed .sidebar-title {
+    opacity: 0;
+}
+
+.toggle-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    outline: none;
+}
+
+.toggle-btn:hover {
+    color: var(--accent-color);
+}
+
+.sidebar-menu {
+    list-style: none;
+    margin-top: 1rem;
+    flex: 1; /* Ocupar el resto del sidebar */
+}
+
+.sidebar-menu li {
+    padding: 0.5rem 1rem;
+}
+
+.sidebar-menu a {
+    color: #ecf0f1;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    padding: 0.8rem;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+    font-size: 1.1rem;
+    white-space: nowrap;
+}
+
+.sidebar-menu a:hover {
+    background-color: var(--primary-hover);
+    color: white;
+}
+
+.icon {
+    font-size: 1.3rem;
+    min-width: 30px; /* Ancho fijo para mantener los iconos centrados al colapsar */
+    text-align: center;
+    margin-right: 15px;
+}
+
+.sidebar.collapsed .icon {
+    margin-right: 0; /* Si está colapsado, el ícono va centrado solo */
+}
+
+.menu-text {
+    opacity: 1;
+    transition: opacity 0.3s;
+}
+
+.sidebar.collapsed .menu-text {
+    opacity: 0;
+}
+
+/* ── CONTENIDO PRINCIPAL (MAIN) ── */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto; /* Scroll solo en el área de contenido si es muy grande */
+    transition: margin-left 0.3s ease;
+}
+
+.topbar {
+    height: 60px;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+    padding: 0 2rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+.dashboard {
+    padding: 2rem;
+    /* Un Grid básico por si quieres poner "Tarjetas/Botones" en el medio de la pantalla después */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Diseño de tarjetas para el dashboard (home) */
+.card-home {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    text-align: center;
+    border-top: 4px solid var(--accent-color);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card-home:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+}
+
+.card-home h3 {
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+}
+
+.card-home p {
+    color: #666;
+    margin-bottom: 1.5rem;
+}
+
+.btn-card {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: var(--accent-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+
+.btn-card:hover {
+    background-color: #006699;
+}

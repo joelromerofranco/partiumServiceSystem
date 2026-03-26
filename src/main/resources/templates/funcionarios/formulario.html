@@ -2,165 +2,165 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Funcionarios</title>
-    <link rel="stylesheet" th:href="@{/css/funcionario-styles.css}">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Funcionarios</title>
+	<link rel="stylesheet" th:href="@{/css/funcionario-styles.css}">
 </head>
 
 <body>
 
-    <h1>Registros de Funcionarios</h1>
+	<h1>Registros de Funcionarios</h1>
 
-    <!-- Mensajes de Feedback -->
-    <div th:if="${mensaje}" class="alert alert-success" th:text="${mensaje}"></div>
-    <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+	<!-- Mensajes de Feedback -->
+	<div th:if="${mensaje}" class="alert alert-success" th:text="${mensaje}"></div>
+	<div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
 
-    <!-- FORMULARIO-->
-    <div class="card" th:if="${mostrarFormulario}">
-        <h2 th:text="${funcionario.idPersona != null} ? 'Editar Funcionario' : 'Nuevo Funcionario'">
-            Nuevo Funcionario
-        </h2>
+	<!-- FORMULARIO-->
+	<div class="card" th:if="${mostrarFormulario}">
+		<h2 th:text="${funcionario.idPersona != null} ? 'Editar Funcionario' : 'Nuevo Funcionario'">
+			Nuevo Funcionario
+		</h2>
 
-        <form th:action="@{/funcionarios/guardar}" th:object="${funcionario}" method="post">
+		<form th:action="@{/funcionarios/guardar}" th:object="${funcionario}" method="post">
 
-            <!-- ID oculto para edición -->
-            <input type="hidden" th:field="*{idPersona}" />
+			<!-- ID oculto para edición -->
+			<input type="hidden" th:field="*{idPersona}" />
 
-            <div class="grid">
+			<div class="grid">
 
-                <!-- ── Datos personales ── -->
-                <div class="section-label">Datos Personales</div>
+				<!-- ── Datos personales ── -->
+				<div class="section-label">Datos Personales</div>
 
-                <div class="field">
-                    <label for="nombre">Nombre</label>
-                    <input type="text" id="nombre" th:field="*{nombre}" maxlength="100" required />
-                </div>
+				<div class="field">
+					<label for="nombre">Nombre</label>
+					<input type="text" id="nombre" th:field="*{nombre}" maxlength="100" required />
+				</div>
 
-                <div class="field">
-                    <label for="apellido">Apellido</label>
-                    <input type="text" id="apellido" th:field="*{apellido}" maxlength="145" required />
-                </div>
+				<div class="field">
+					<label for="apellido">Apellido</label>
+					<input type="text" id="apellido" th:field="*{apellido}" maxlength="145" required />
+				</div>
 
-                <div class="field">
-                    <label for="documento">Documento</label>
-                    <input type="text" id="documento" th:field="*{documento}" maxlength="45" required />
-                </div>
+				<div class="field">
+					<label for="documento">Documento</label>
+					<input type="text" id="documento" th:field="*{documento}" maxlength="45" required />
+				</div>
 
-                <div class="field">
-                    <label for="fechaNacimiento">Fecha de Nacimiento</label>
-                    <input type="date" id="fechaNacimiento" th:field="*{fechaNacimiento}" required />
-                </div>
+				<div class="field">
+					<label for="fechaNacimiento">Fecha de Nacimiento</label>
+					<input type="date" id="fechaNacimiento" th:field="*{fechaNacimiento}" required />
+				</div>
 
-                <div class="field">
-                    <label for="sexo">Sexo</label>
-                    <select id="sexo" th:field="*{sexo}" required>
-                        <option value="">...</option>
-                        <option value="M">Masculino</option>
-                        <option value="F">Femenino</option>
+				<div class="field">
+					<label for="sexo">Sexo</label>
+					<select id="sexo" th:field="*{sexo}" required>
+						<option value="">...</option>
+						<option value="M">Masculino</option>
+						<option value="F">Femenino</option>
 
-                    </select>
-                </div>
+					</select>
+				</div>
 
-                <div class="field">
-                    <label for="telefono">Teléfono</label>
-                    <input type="tel" id="telefono" th:field="*{telefono}" maxlength="45" required />
-                </div>
+				<div class="field">
+					<label for="telefono">Teléfono</label>
+					<input type="tel" id="telefono" th:field="*{telefono}" maxlength="45" required />
+				</div>
 
-                <div class="field col-2">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" th:field="*{email}" maxlength="150" required />
-                </div>
+				<div class="field col-2">
+					<label for="email">Email</label>
+					<input type="email" id="email" th:field="*{email}" maxlength="150" required />
+				</div>
 
-                <div class="field col-3">
-                    <label for="direccion">Dirección</label>
-                    <input type="text" id="direccion" th:field="*{direccion}" maxlength="200" required />
-                </div>
+				<div class="field col-3">
+					<label for="direccion">Dirección</label>
+					<input type="text" id="direccion" th:field="*{direccion}" maxlength="200" required />
+				</div>
 
-                <!-- ── Datos del funcionario ── -->
-                <div class="section-label">Datos del Funcionario</div>
+				<!-- ── Datos del funcionario ── -->
+				<div class="section-label">Datos del Funcionario</div>
 
-                <div class="field">
-                    <label for="cargo">Cargo</label>
-                    <input type="text" id="cargo" th:field="*{cargo}" maxlength="45" required />
-                </div>
+				<div class="field">
+					<label for="cargo">Cargo</label>
+					<input type="text" id="cargo" th:field="*{cargo}" maxlength="45" required />
+				</div>
 
-                <div class="field">
-                    <label for="fechaIngreso">Fecha de Ingreso</label>
-                    <input type="date" id="fechaIngreso" th:field="*{fechaIngreso}" required />
-                </div>
+				<div class="field">
+					<label for="fechaIngreso">Fecha de Ingreso</label>
+					<input type="date" id="fechaIngreso" th:field="*{fechaIngreso}" required />
+				</div>
 
-                <div class="field">
-                    <label for="estado">Estado</label>
-                    <select id="estado" th:field="*{estado}" required>
-                        <option value="">...</option>
-                        <option value="ACTIVO">Activo</option>
-                        <option value="INACTIVO">Inactivo</option>
-                        <option value="LICENCIA">En licencia</option>
-                    </select>
-                </div>
+				<div class="field">
+					<label for="estado">Estado</label>
+					<select id="estado" th:field="*{estado}" required>
+						<option value="">...</option>
+						<option value="ACTIVO">Activo</option>
+						<option value="INACTIVO">Inactivo</option>
+						<option value="LICENCIA">En licencia</option>
+					</select>
+				</div>
 
-            </div><!-- /grid -->
+			</div><!-- /grid -->
 
-            <div class="botones">
-                <button type="submit" class="btn-guardar"
-                    th:text="${funcionario.idPersona != null} ? '✏ Editar' : '💾 Guardar'">💾 Guardar</button>
-                <a href="/funcionarios" class="btn btn-cancelar">✖ Cancelar</a>
-            </div>
+			<div class="botones">
+				<button type="submit" class="btn-guardar"
+					th:text="${funcionario.idPersona != null} ? '✏ Editar' : '💾 Guardar'">💾 Guardar</button>
+				<a href="/funcionarios" class="btn btn-cancelar">✖ Cancelar</a>
+			</div>
 
-        </form>
-    </div>
+		</form>
+	</div>
 
-    <!-- Lista de los que se an registrado en la  DB-->
-    <div class="card" th:if="${!mostrarFormulario}">
-        <h2>Listado de Funcionarios</h2>
+	<!-- Lista de los que se an registrado en la  DB-->
+	<div class="card" th:if="${!mostrarFormulario}">
+		<h2>Listado de Funcionarios</h2>
 
-        <div class="botones" style="margin-bottom: 1rem;">
-            <a href="/funcionarios/nuevo" class="btn btn-nuevo">➕ Nuevo</a>
-        </div>
+		<div class="botones" style="margin-bottom: 1rem;">
+			<a href="/funcionarios/nuevo" class="btn btn-nuevo">➕ Nuevo</a>
+		</div>
 
-        <!-- Buscador -->
-        <form th:action="@{/funcionarios}" method="get" class="buscador">
-            <input type="text" name="filtro" placeholder="Buscar por nombre, apellido, documento o cargo..."
-                th:value="${filtro}" />
-            <button type="submit" class="btn-buscar">🔍 Buscar</button>
-            <a href="/funcionarios" class="btn-buscar" style="background:#95a5a6;">🧹 Limpiar</a>
-        </form>
+		<!-- Buscador -->
+		<form th:action="@{/funcionarios}" method="get" class="buscador">
+			<input type="text" name="filtro" placeholder="Buscar por nombre, apellido, documento o cargo..."
+				th:value="${filtro}" />
+			<button type="submit" class="btn-buscar">🔍 Buscar</button>
+			<a href="/funcionarios" class="btn-buscar" style="background:#95a5a6;">🧹 Limpiar</a>
+		</form>
 
-        <table>
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Nombre</th>
-                    <th>Apellido</th>
-                    <th>Documento</th>
-                    <th>Cargo</th>
-                    <th>Fecha Ingreso</th>
-                    <th>Estado</th>
-                    <th>Acciones</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:if="${#lists.isEmpty(funcionarios)}">
-                    <td colspan="8" class="sin-datos">No hay funcionarios registrados.</td>
-                </tr>
-                <tr th:each="f : ${funcionarios}">
-                    <td th:text="${f.idPersona}"></td>
-                    <td th:text="${f.nombre}"></td>
-                    <td th:text="${f.apellido}"></td>
-                    <td th:text="${f.documento}"></td>
-                    <td th:text="${f.cargo}"></td>
-                    <td th:text="${f.fechaIngreso}"></td>
-                    <td th:text="${f.estado}"></td>
-                    <td class="acciones">
-                        <a th:href="@{/funcionarios/editar/{id}(id=${f.idPersona})}" class="btn-editar">✍🏻Editar</a>
-                        <a th:href="@{/funcionarios/eliminar/{id}(id=${f.idPersona})}" class="btn-eliminar"
-                            onclick="return confirm('¿Confirma eliminar este funcionario?')">🚮Eliminar</a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+		<table>
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Nombre</th>
+					<th>Apellido</th>
+					<th>Documento</th>
+					<th>Cargo</th>
+					<th>Fecha Ingreso</th>
+					<th>Estado</th>
+					<th>Acciones</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr th:if="${#lists.isEmpty(funcionarios)}">
+					<td colspan="8" class="sin-datos">No hay funcionarios registrados.</td>
+				</tr>
+				<tr th:each="f : ${funcionarios}">
+					<td th:text="${f.idPersona}"></td>
+					<td th:text="${f.nombre}"></td>
+					<td th:text="${f.apellido}"></td>
+					<td th:text="${f.documento}"></td>
+					<td th:text="${f.cargo}"></td>
+					<td th:text="${#temporals.format(f.fechaIngreso, 'dd-MM-yyyy')}"></td>
+					<td th:text="${f.estado}"></td>
+					<td class="acciones">
+						<a th:href="@{/funcionarios/editar/{id}(id=${f.idPersona})}" class="btn-editar">✍🏻Editar</a>
+						<a th:href="@{/funcionarios/eliminar/{id}(id=${f.idPersona})}" class="btn-eliminar"
+							onclick="return confirm('¿Confirma eliminar este funcionario?')">🚮Eliminar</a>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
 
 </body>
 

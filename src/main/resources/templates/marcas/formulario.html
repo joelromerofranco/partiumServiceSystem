@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Marcas</title>
+    <link rel="stylesheet" th:href="@{/css/marca-styles.css}">
+</head>
+
+<body>
+
+    <h1>Registros de Marcas</h1>
+
+    <!-- Mensajes de Feedback -->
+    <div th:if="${mensaje}" class="alert alert-success" th:text="${mensaje}"></div>
+    <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+    <!-- FORMULARIO-->
+    <div class="card" th:if="${mostrarFormulario}">
+        <h2 th:text="${marca.idMarca != 0} ? 'Editar marca' : 'Nueva Marca'">
+            Nueva Marca
+        </h2>
+
+        <form th:action="@{/marcas/guardar}" th:object="${marca}" method="post">
+
+            <!-- ID oculto para edición -->
+            <input type="hidden" th:field="*{idMarca}" />
+
+            <div class="grid">
+
+                <!-- ── donde se llena los Datos  ── -->
+                <div class="section-label">Datos la marca</div>
+
+                <div class="field">
+                    <label for="abreviatura">Abreviatura</label>
+                    <input type="text" id="abreviatura" th:field="*{abreviatura}" maxlength="60" required />
+                </div>
+
+                <div class="field">
+                    <label for="descripcion">Descripción</label>
+                    <input type="text" id="descripcion" th:field="*{descripcion}" maxlength="300" required />
+                </div>
+                <div class="field">
+                    <label for="estado">Estado</label>
+                    <select id="estado" th:field="*{estado}" required>
+                        <option value="">...</option>
+                        <option value="true">Activo</option>
+                        <option value="false">Inactivo</option>
+                    </select>
+                </div>
+
+            </div><!-- /grid -->
+
+            <div class="botones">
+                <button type="submit" class="btn-guardar"
+                    th:text="${marca.idMarca != 0} ? '✏ Editar' : '💾 Guardar'">💾 Guardar</button>
+                <a href="/marcas" class="btn btn-cancelar">✖ Cancelar</a>
+				
+            </div>
+
+        </form>
+    </div>
+
+    <!-- Lista de los que se an registrado en la  DB-->
+        <div class="card" th:if="${!mostrarFormulario}">
+        <h2>Listado de Marca</h2>
+
+		<div class="botones" style="margin-bottom: 1rem;">
+		    <a href="/marcas/nuevo" class="btn btn-nuevo">➕ Nuevo</a>
+		</div>
+        <!-- Buscador -->
+        <form th:action="@{/marcas}" method="get" class="buscador">
+            <input type="text" name="filtro" placeholder="Buscar..."
+                th:value="${filtro}" />
+            <button type="submit" class="btn-buscar">🔍 Buscar</button>
+            <a href="/marcas" class="btn-buscar" style="background:#95a5a6;">🧹 Limpiar</a>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Abreviatura</th>
+                    <th>Descripción</th>
+                    <th>Estado</th>
+					<th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:if="${#lists.isEmpty(marcas)}">
+                    <td colspan="5" class="sin-datos">No hay marcas registrados.</td>
+                </tr>
+                <tr th:each="m : ${marcas}">
+                    <td th:text="${m.idMarca}"></td>
+                    <td th:text="${m.abreviatura}"></td>
+                    <td th:text="${m.descripcion}"></td>
+                    <td th:text="${m.estado ? 'Activo' : 'Inactivo'}"></td>
+                    <td class="acciones">
+                        <a th:href="@{/marcas/editar/{id}(id=${m.idMarca})}" class="btn-editar">✍🏻Editar</a>
+                        <a th:href="@{/marcas/eliminar/{id}(id=${m.idMarca})}" class="btn-eliminar"
+                            onclick="return confirm('¿Confirma eliminar este Registro?')">🚮Eliminar</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+   
+</body>
+
+</html>

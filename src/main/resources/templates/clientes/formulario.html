@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clientes</title>
+    <link rel="stylesheet" th:href="@{/css/cliente-styles.css}">
+</head>
+
+<body>
+
+    <h1>Registros de Clientes</h1>
+
+    <!-- Mensajes de Feedback -->
+    <div th:if="${mensaje}" class="alert alert-success" th:text="${mensaje}"></div>
+    <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+    <!-- FORMULARIO-->
+    <div class="card" th:if="${mostrarFormulario}">
+        <h2 th:text="${cliente.idPersona != null} ? 'Editar Cliente' : 'Nuevo Cliente'">
+            Nuevo Cliente
+        </h2>
+
+        <form th:action="@{/clientes/guardar}" th:object="${cliente}" method="post">
+
+            <!-- ID oculto para edición -->
+            <input type="hidden" th:field="*{idPersona}" />
+
+            <div class="grid">
+
+                <!-- ── Datos personales ── -->
+                <div class="section-label">Datos Personales</div>
+
+                <div class="field">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" id="nombre" th:field="*{nombre}" maxlength="100" required />
+                </div>
+
+                <div class="field">
+                    <label for="apellido">Apellido</label>
+                    <input type="text" id="apellido" th:field="*{apellido}" maxlength="145" required />
+                </div>
+
+                <div class="field">
+                    <label for="documento">Documento</label>
+                    <input type="text" id="documento" th:field="*{documento}" maxlength="45" required />
+                </div>
+
+                <div class="field">
+                    <label for="fechaNacimiento">Fecha de Nacimiento</label>
+                    <input type="date" id="fechaNacimiento" th:field="*{fechaNacimiento}" required />
+                </div>
+
+                <div class="field">
+                    <label for="sexo">Sexo</label>
+                    <select id="sexo" th:field="*{sexo}" required>
+                        <option value="">...</option>
+                        <option value="M">Masculino</option>
+                        <option value="F">Femenino</option>
+
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="telefono">Teléfono</label>
+                    <input type="tel" id="telefono" th:field="*{telefono}" maxlength="45" required />
+                </div>
+
+                <div class="field col-2">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" th:field="*{email}" maxlength="150" required />
+                </div>
+
+                <div class="field col-3">
+                    <label for="direccion">Dirección</label>
+                    <input type="text" id="direccion" th:field="*{direccion}" maxlength="200" required />
+                </div>
+
+                <!-- ── Datos adicionales del Cliente ── -->
+                <div class="section-label">Datos adicionales del Cliente</div>
+
+                <div class="field">
+                    <label for="tipoCliente">Tipo de Cliente</label>
+                    <input type="text" id="tipoCliente" th:field="*{tipoCliente}" maxlength="45" required />
+                </div>
+
+
+
+                <div class="field">
+                    <label for="estado">Estado</label>
+                    <select id="estado" th:field="*{estado}" required>
+                        <option value="">...</option>
+                        <option value="ACTIVO">Activo</option>
+                        <option value="INACTIVO">Inactivo</option>
+                    </select>
+                </div>
+
+            </div><!-- /grid -->
+
+            <div class="botones">
+                <button type="submit" class="btn-guardar"
+                    th:text="${cliente.idPersona != null} ? '✏ Editar' : '💾 Guardar'">💾 Guardar</button>
+                <a href="/clientes" class="btn btn-cancelar">✖ Cancelar</a>
+            </div>
+
+        </form>
+    </div>
+
+    <!-- Lista de los que se an registrado en la  DB-->
+    <div class="card" th:if="${!mostrarFormulario}">
+        <h2>Listado de Clientes</h2>
+
+        <div class="botones" style="margin-bottom: 1rem;">
+            <a href="/clientes/nuevo" class="btn btn-nuevo">➕ Nuevo</a>
+        </div>
+
+        <!-- Buscador -->
+        <form th:action="@{/clientes}" method="get" class="buscador">
+            <input type="text" name="filtro" placeholder="Buscar por nombre, apellido, documento o tipo de cliente..."
+                th:value="${filtro}" />
+            <button type="submit" class="btn-buscar">🔍 Buscar</button>
+            <a href="/clientes" class="btn-buscar" style="background:#95a5a6;">🧹 Limpiar</a>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>Documento</th>
+					<th>Tipo de Cliente</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:if="${#lists.isEmpty(clientes)}">
+                    <td colspan="8" class="sin-datos">No hay clientes registrados.</td>
+                </tr>
+                <tr th:each="c : ${clientes}">
+                    <td th:text="${c.idPersona}"></td>
+                    <td th:text="${c.nombre}"></td>
+                    <td th:text="${c.apellido}"></td>
+                    <td th:text="${c.documento}"></td>
+                    <td th:text="${c.tipoCliente}"></td>
+                    <td th:text="${c.estado}"></td>
+                    <td class="acciones">
+                        <a th:href="@{/clientes/editar/{id}(id=${c.idPersona})}" class="btn-editar">✍🏻Editar</a>
+                        <a th:href="@{/clientes/eliminar/{id}(id=${c.idPersona})}" class="btn-eliminar"
+                            onclick="return confirm('¿Confirma eliminar este Registro?')">🚮Eliminar</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+   
+</body>
+
+</html>

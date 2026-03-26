@@ -13,84 +13,84 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import partiumServiceSystem.dao.FuncionarioDao;
-import partiumServiceSystem.entidades.Funcionario;
+import partiumServiceSystem.dao.ClienteDao;
+import partiumServiceSystem.entidades.Cliente;
 
 @Controller
-@RequestMapping("/funcionarios")
-public class FuncionarioController {
+@RequestMapping("/clientes")
+public class ClienteController {
 
     @Autowired
-    private FuncionarioDao funcionarioDao;
+    private ClienteDao clienteDao;
 
     // Al inicializar el controlador y cargar la tabla
     @GetMapping
     public String inicializar(@RequestParam(required = false) String filtro, Model model) {
-        if (!model.containsAttribute("funcionario")) {
-            model.addAttribute("funcionario", new Funcionario());
+        if (!model.containsAttribute("cliente")) {
+            model.addAttribute("cliente", new Cliente());
         }
         if (filtro != null && !filtro.isBlank()) {
-            consultarFuncionario(filtro, model);
+            consultarCliente(filtro, model);
         } else {
             recuperarTodo(model);
         }
         model.addAttribute("filtro", filtro);
         model.addAttribute("mostrarFormulario", false);
-        return "funcionarios/formulario";
+        return "clientes/formulario";
     }
 
     // Helper para recuperar todos los registros 
     private void recuperarTodo(Model model) {
-        List<Funcionario> lista = funcionarioDao.recuperarTodo();
-        model.addAttribute("funcionarios", lista);
+        List<Cliente> lista = clienteDao.recuperarTodo();
+        model.addAttribute("clientes", lista);
     }
 
     // Helper para consultar por filtro 
-    private void consultarFuncionario(String filtro, Model model) {
-        List<Funcionario> lista = funcionarioDao.recuperarPorFiltro(filtro);
-        model.addAttribute("funcionarios", lista);
+    private void consultarCliente(String filtro, Model model) {
+        List<Cliente> lista = clienteDao.recuperarPorFiltro(filtro);
+        model.addAttribute("clientes", lista);
     }
 
     // Mostrar formulario para nuevo 
     @GetMapping("/nuevo")
     public String nuevo(Model model) {
-        if (!model.containsAttribute("funcionario")) {
-            model.addAttribute("funcionario", new Funcionario());
+        if (!model.containsAttribute("cliente")) {
+            model.addAttribute("cliente", new Cliente());
         }
         recuperarTodo(model);
         model.addAttribute("mostrarFormulario", true);
-        return "funcionarios/formulario";
+        return "clientes/formulario";
     }
 
     // Mostrar formulario para editar 
     @GetMapping("/editar/{id}")
     public String modificar(@PathVariable Integer id, Model model) {
-        Funcionario funcionario = funcionarioDao.recuperarPorId(id);
-        if (funcionario == null) {
-            return "redirect:/funcionarios/nuevo";
+        Cliente cliente = clienteDao.recuperarPorId(id);
+        if (cliente == null) {
+            return "redirect:/clientes/nuevo";
         }
-        model.addAttribute("funcionario", funcionario);
+        model.addAttribute("cliente", cliente);
         recuperarTodo(model);
         model.addAttribute("mostrarFormulario", true);
-        return "funcionarios/formulario";
+        return "clientes/formulario";
     }
 
     // Guardar o actualizar 
     @PostMapping("/guardar")
-    public String guardar(@ModelAttribute Funcionario funcionario, RedirectAttributes redirectAttributes) {
+    public String guardar(@ModelAttribute Cliente cliente, RedirectAttributes redirectAttributes) {
         try {
-            if (!validarCampos(funcionario, redirectAttributes)) {
+            if (!validarCampos(cliente, redirectAttributes)) {
                 // En Spring MVC, si falla la validación, solemos redirigir con errores
                 // o volver a mostrar la vista. Aquí redirigimos para simplificar el flujo ABM.
-                return "redirect:/funcionarios/nuevo";
+                return "redirect:/clientes/nuevo";
             }
-            funcionarioDao.guardar(funcionario);
-            redirectAttributes.addFlashAttribute("mensaje", "Funcionario guardado correctamente");
-            return "redirect:/funcionarios";
+            clienteDao.guardar(cliente);
+			redirectAttributes.addFlashAttribute("mensaje", "Cliente guardado correctamente");
+            return "redirect:/clientes";
         } catch (Exception e) {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("error", "Error al guardar: " + e.getMessage());
-            return "redirect:/funcionarios/nuevo";
+            return "redirect:/clientes/nuevo";
         }
     }
 
@@ -98,43 +98,42 @@ public class FuncionarioController {
     @GetMapping("/eliminar/{id}")
     public String eliminar(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
         try {
-            Funcionario funcionario = funcionarioDao.recuperarPorId(id);
-            if (funcionario != null) {
-                funcionarioDao.eliminar(funcionario);
-                redirectAttributes.addFlashAttribute("mensaje", "Funcionario eliminado correctamente");
+            Cliente cliente = clienteDao.recuperarPorId(id);
+            if (cliente != null) {
+                clienteDao.eliminar(cliente);
+                redirectAttributes.addFlashAttribute("mensaje", "Registro eliminado correctamente");
             }
         } catch (Exception e) {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("error", "Error al eliminar: " + e.getMessage());
         }
-        return "redirect:/funcionarios";
+        return "redirect:/clientes";
     }
 
     // Validación lógica 
-    private boolean validarCampos(Funcionario f, RedirectAttributes redirectAttributes) {
-        if (f.getNombre() == null || f.getNombre().isBlank()) {
+    private boolean validarCampos(Cliente c, RedirectAttributes redirectAttributes) {
+        if (c.getNombre() == null || c.getNombre().isBlank()) {
             redirectAttributes.addFlashAttribute("error", "El campo Nombre está vacío");
             return false;
         }
-        if (f.getApellido() == null || f.getApellido().isBlank()) {
+        if (c.getApellido() == null || c.getApellido().isBlank()) {
             redirectAttributes.addFlashAttribute("error", "El campo Apellido está vacío");
             return false;
         }
-        if (f.getDocumento() == null || f.getDocumento().isBlank()) {
+        if (c.getDocumento() == null || c.getDocumento().isBlank()) {
             redirectAttributes.addFlashAttribute("error", "El campo Documento está vacío");
             return false;
         }
-
         // Verificación de duplicados 
-        Funcionario existente = funcionarioDao.recuperarPorFiltro(f.getDocumento()).stream()
-                .filter(p -> p.getDocumento().equals(f.getDocumento()))
+        Cliente existente = clienteDao.recuperarPorFiltro(c.getDocumento()).stream()
+                .filter(p -> p.getDocumento().equals(c.getDocumento()))
                 .findFirst().orElse(null);
 
         if (existente != null) {
-            if (f.getIdPersona() == null) { // Es nuevo
+            if (c.getIdPersona() == null) { // Es nuevo
                 redirectAttributes.addFlashAttribute("error", "Documento duplicado");
                 return false;
-            } else if (!f.getIdPersona().equals(existente.getIdPersona())) { // Es edición y el documento es de otro
+            } else if (!c.getIdPersona().equals(existente.getIdPersona())) { // Es edición y el documento es de otro
                 redirectAttributes.addFlashAttribute("error", "Documento duplicado");
                 return false;
             }

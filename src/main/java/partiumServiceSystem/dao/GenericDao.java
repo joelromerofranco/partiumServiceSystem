@@ -58,7 +58,7 @@ public abstract class GenericDao<T> {
     }
 
     public List<T> recuperarTodo() {
-        String hql = "from " + clase.getName() + " order by idPersona desc";
+        String hql = "from " + clase.getName();
         Query<T> query = getSession().createQuery(hql, clase);
         return query.getResultList();
     }

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partium Service System - Inicio</title>
+    <!-- Vinculamos la hoja de estilos que creamos -->
+    <link rel="stylesheet" th:href="@{/css/index-styles.css}">
+</head>
+<body>
+
+    <!-- BARRA LATERAL (SIDEBAR) -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <!-- Título de nuestra Sidebar -->
+            <span class="sidebar-title">Partium Service</span>
+            <!-- Botón Hamburguesa -->
+            <button class="toggle-btn" id="btn-toggle">☰</button>
+        </div>
+
+        <ul class="sidebar-menu">
+            <li>
+                <a th:href="@{/}">
+                    <span class="icon">🏠</span>
+                    <span class="menu-text">Inicio</span>
+                </a>
+            </li>
+            <li>
+                <a th:href="@{/clientes}">
+                    <span class="icon">👥</span>
+                    <span class="menu-text">Clientes</span>
+                </a>
+            </li>
+            <li>
+                <a th:href="@{/funcionarios}">
+                    <span class="icon">💼</span>
+                    <span class="menu-text">Funcionarios</span>
+                </a>
+            </li>
+        </ul>
+    </aside>
+
+    <!-- ÁREA DE CONTENIDO PRINCIPAL -->
+    <main class="main-content">
+        <!-- Barra Superior (Topbar) -->
+        <header class="topbar">
+            Panel de Control Principal
+        </header>
+
+        <!-- Cuadrícula (Dashboard) para poner tarjetas de bienvenida -->
+        <section class="dashboard">
+            
+            <div class="card-home">
+                <h3>👥 Gestión de Clientes</h3>
+                <p>Agrega, edita o elimina la información de tus clientes registrados en el sistema de manera rápida y sencilla.</p>
+                <a th:href="@{/clientes}" class="btn-card">Ir a Clientes</a>
+            </div>
+
+            <div class="card-home">
+                <h3>💼 Gestión de Funcionarios</h3>
+                <p>Administra la plantilla de tu empresa, asigna roles de cargo superior o inferior directamente al personal.</p>
+                <a th:href="@{/funcionarios}" class="btn-card">Ir a Funcionarios</a>
+            </div>
+
+        </section>
+    </main>
+
+    <!-- SCRIPT MUY CORTO PARA EL BOTÓN RESPONSIVO -->
+    <script>
+        const btnToggle = document.getElementById('btn-toggle');
+        const sidebar = document.getElementById('sidebar');
+
+        // Escuchamos el clic y quitamos/agregamos la clase "collapsed" a la barra.
+        btnToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
+        });
+    </script>
+</body>
+</html>
