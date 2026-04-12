@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Proveedores</title>
+    <link rel="stylesheet" th:href="@{/css/cliente-styles.css}">
+</head>
+
+<body>
+
+    <h1>Registros de Proveedores</h1>
+
+    <!-- Mensajes de Feedback -->
+    <div th:if="${mensaje}" class="alert alert-success" th:text="${mensaje}"></div>
+    <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+    <!-- FORMULARIO-->
+    <div class="card" th:if="${mostrarFormulario}">
+        <h2 th:text="${proveedor.idProveedor != null} ? 'Editar Proveedor' : 'Nuevo Proveedor'">
+            Nuevo Proveedor
+        </h2>
+
+        <form th:action="@{/proveedores/guardar}" th:object="${proveedor}" method="post">
+
+            <!-- ID oculto para edición -->
+            <input type="hidden" th:field="*{idProveedor}" />
+
+            <div class="grid">
+
+                <!-- ── Datos personales ── -->
+                <div class="section-label">Datos Proveedor</div>
+
+                <div class="field">
+                    <label for="razonSocial">Razon Social</label>
+                    <input type="text" id="razonSocial" th:field="*{razonSocial}" maxlength="100" required />
+                </div>
+
+                <div class="field">
+                    <label for="direccion">Direccion</label>
+                    <input type="text" id="direccion" th:field="*{direccion}" maxlength="145" required />
+                </div>
+
+                <div class="field">
+                    <label for="documento">Documento</label>
+                    <input type="text" id="documento" th:field="*{documento}" maxlength="45" required />
+                </div>
+
+                <div class="field">
+                    <label for="fechaRegistro">Fecha de Registro</label>
+                    <input type="date" id="fechaRegistro" th:field="*{fechaRegistro}" required />
+                </div>
+
+                <div class="field">
+                    <label for="estado">Estado</label>
+                    <select id="estado" th:field="*{estado}" required>
+                        <option value="">...</option>
+                        <option value="A">Activo</option>
+                        <option value="I">Inactivo</option>
+
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="telefono">Teléfono</label>
+                    <input type="tel" id="telefono" th:field="*{telefono}" maxlength="45" required />
+                </div>
+
+                <div class="field col-2">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" th:field="*{email}" maxlength="150" required />
+                </div>
+
+                <div class="field">
+                    <label for="tipoProveedor">Tipo de Proveedor</label>
+                    <input type="text" id="tipoProveedor" th:field="*{tipoProveedor}" maxlength="45" required />
+                </div>
+
+       
+
+            </div><!-- /grid -->
+
+            <div class="botones">
+                <button type="submit" class="btn-guardar"
+                    th:text="${proveedor.idProveedor != null} ? '✏ Editar' : '💾 Guardar'">💾 Guardar</button>
+                <a href="/proveedores" class="btn btn-cancelar">✖ Cancelar</a>
+            </div>
+
+        </form>
+    </div>
+
+    <!-- Lista de los que se an registrado en la  DB-->
+    <div class="card" th:if="${!mostrarFormulario}">
+        <h2>Listado de Proveedores</h2>
+
+        <div class="botones" style="margin-bottom: 1rem;">
+            <a href="/proveedores/nuevo" class="btn btn-nuevo">➕ Nuevo</a>
+        </div>
+
+        <!-- Buscador -->
+        <form th:action="@{/proveedores}" method="get" class="buscador">
+            <input type="text" name="filtro" placeholder="Buscar por razon social, documento o tipo de proveedor..."
+                th:value="${filtro}" />
+            <button type="submit" class="btn-buscar">🔍 Buscar</button>
+            <a href="/proveedores" class="btn-buscar" style="background:#95a5a6;">🧹 Limpiar</a>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nombre</th>
+                    <th>Dirección</th>
+                    <th>Documento</th>
+					<th>Telefono</th>
+					<th>Tipo de Proveedor</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:if="${#lists.isEmpty(proveedores)}">
+                    <td colspan="8" class="sin-datos">No hay proveedores registrados.</td>
+                </tr>
+                <tr th:each="pr : ${proveedores}">
+                    <td th:text="${pr.idProveedor}"></td>
+                    <td th:text="${pr.razonSocial}"></td>
+                    <td th:text="${pr.direccion}"></td>
+                    <td th:text="${pr.documento}"></td>
+                    <td th:text="${pr.telefono}"></td>
+                    <td th:text="${pr.tipoProveedor}"></td>
+                    <td class="acciones">
+                        <a th:href="@{/proveedores/editar/{id}(id=${pr.idProveedor})}" class="btn-editar">✍🏻Editar</a>
+                        <a th:href="@{/proveedores/eliminar/{id}(id=${pr.idProveedor})}" class="btn-eliminar"
+                            onclick="return confirm('¿Confirma eliminar este Registro?')">🚮Eliminar</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+   
+</body>
+
+</html>

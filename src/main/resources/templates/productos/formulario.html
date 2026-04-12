@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Productos</title>
+    <!-- Se usa el css de categoria para mantener el mismo estilo -->
+    <link rel="stylesheet" th:href="@{/css/categoria-styles.css}">
+</head>
+
+<body>
+
+    <h1>Registros de Productos</h1>
+
+    <!-- Mensajes de Feedback -->
+    <div th:if="${mensaje}" class="alert alert-success" th:text="${mensaje}"></div>
+    <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+    <!-- FORMULARIO-->
+    <div class="card" th:if="${mostrarFormulario}">
+        <h2 th:text="${producto.idProducto != 0} ? 'Editar Producto' : 'Nuevo Producto'">
+            Nuevo Producto
+        </h2>
+
+        <form th:action="@{/productos/guardar}" th:object="${producto}" method="post">
+
+            <!-- ID oculto para edición -->
+            <input type="hidden" th:field="*{idProducto}" />
+
+            <div class="grid">
+
+                <div class="section-label">Datos del producto</div>
+
+                <div class="field">
+                    <label for="sigla">Sigla</label>
+                    <input type="text" id="sigla" th:field="*{sigla}" maxlength="45" required />
+                </div>
+
+                <div class="field">
+                    <label for="descripcion">Descripción</label>
+                    <input type="text" id="descripcion" th:field="*{descripcion}" maxlength="200" required />
+                </div>
+
+                <div class="field">
+                    <label for="ubicacion">Ubicación</label>
+                    <input type="text" id="ubicacion" th:field="*{ubicacion}" maxlength="100" />
+                </div>
+
+                <div class="field">
+                    <label for="cantidad">Cantidad</label>
+                    <input type="number" id="cantidad" th:field="*{cantidad}" required />
+                </div>
+
+                <div class="field">
+                    <label for="precioVenta">Precio Venta</label>
+                    <input type="number" step="00.01" id="precioVenta" th:field="*{precioVenta}" required />
+                </div>
+
+                <div class="field">
+                    <label for="marca">Marca</label>
+                    <select id="marca" th:field="*{marca.idMarca}" required>
+                        <option value="0" disabled selected>Seleccione una marca...</option>
+                        <option th:each="m : ${marcas}" th:value="${m.idMarca}" th:text="${m.descripcion}"></option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="categoria">Categoria</label>
+                    <select id="categoria" th:field="*{categoria.idCategoria}" required>
+                        <option value="0" disabled selected>Seleccione una categoria...</option>
+                        <option th:each="c : ${categorias}" th:value="${c.idCategoria}" th:text="${c.descripcion}"></option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="estado">Estado</label>
+                    <select id="estado" th:field="*{estado}" required>
+                        <option value="" disabled selected>Seleccione...</option>
+                        <option value="true">Activo</option>
+                        <option value="false">Inactivo</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="botones">
+                <button type="submit" class="btn-guardar"
+                    th:text="${producto.idProducto != 0} ? '✏ Editar' : '💾 Guardar'">💾 Guardar</button>
+                <a href="/productos" class="btn btn-cancelar">✖ Cancelar</a>
+            </div>
+
+        </form>
+    </div>
+
+    <!-- Listado -->
+    <div class="card" th:if="${!mostrarFormulario}">
+        <h2>Listado de Productos</h2>
+
+        <div class="botones" style="margin-bottom: 1rem;">
+            <a href="/productos/nuevo" class="btn btn-nuevo">➕ Nuevo</a>
+        </div>
+
+        <!-- Buscador -->
+        <form th:action="@{/productos}" method="get" class="buscador">
+            <input type="text" name="filtro" placeholder="Buscar por sigla o descripción..."
+                th:value="${filtro}" />
+            <button type="submit" class="btn-buscar">🔍 Buscar</button>
+            <a href="/productos" class="btn-buscar" style="background:#95a5a6;">🧹 Limpiar</a>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Sigla</th>
+                    <th>Descripción</th>
+                    <th>Ubicación</th>
+                   	<th>Stock</th>
+					<th>Precio</th>
+					<th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:if="${#lists.isEmpty(productos)}">
+                    <td colspan="7" class="sin-datos">No hay productos registrados.</td>
+                </tr>
+                <tr th:each="p : ${productos}">
+                    <td th:text="${p.idProducto}"></td>
+                    <td th:text="${p.sigla}"></td>
+                    <td th:text="${p.descripcion}"></td>
+                    <td th:text="${p.ubicacion}"></td>
+					<td th:text="${p.cantidad}"></td>
+                    <td th:text="${p.precioVenta}"></td>
+                    <td th:text="${p.estado ? 'Activo' : 'Inactivo'}"></td>
+                    <td class="acciones">
+                        <a th:href="@{/productos/editar/{id}(id=${p.idProducto})}" class="btn-editar">✍🏻Editar</a>
+                        <a th:href="@{/productos/eliminar/{id}(id=${p.idProducto})}" class="btn-eliminar"
+                            onclick="return confirm('¿Confirma eliminar este producto?')">🚮Eliminar</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+   
+</body>
+</html>
