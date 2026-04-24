@@ -1,0 +1,8 @@
+
+git pull    ---> Actualiza la carpeta con los cambios del repositorio
+
+git add .   ---> Guarda los cambios que hiciste
+
+git commit -m "Mensajeee"     ---> Comenta los cambios que agregaste
+
+git pull origin main     ---> sube los cambios al repositorio
