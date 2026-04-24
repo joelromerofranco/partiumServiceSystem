@@ -1,4 +1,4 @@
-package partiumServiceSystem.dao;
+/*package partiumServiceSystem.dao;
 
 import java.util.List;
 
@@ -54,4 +54,3 @@ public class TimbradoDao extends GenericDao<Categoria> {
 
         return query.getResultList();
     }*/
-}
