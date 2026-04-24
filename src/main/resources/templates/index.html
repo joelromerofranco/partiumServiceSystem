@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Partium Service System - Inicio</title>
+    <!-- Vinculamos la hoja de estilos que creamos -->
+    <link rel="stylesheet" th:href="@{/css/index-styles.css(v='2')}">
+</head>
+<body>
+
+    <!-- BARRA LATERAL (SIDEBAR) -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <span class="sidebar-title">🛒 Partium Service🛠️ </span>
+            <button class="toggle-btn" id="btn-toggle">☰</button>
+        </div>
+
+        <ul class="sidebar-menu">
+			<!-- Grupo: Registros -->
+						           <li class="menu-group">
+						               <div class="menu-header">
+						                   <span class="icon">🗃️</span>
+						                   <span class="menu-text">Registros</span>
+						                   <span class="chevron">▼</span>
+						               </div>
+						               <ul class="menu-items">
+						                   <li><a th:href="@{/clientes}" target="content-frame">Clientes</a></li>
+						                   <li><a th:href="@{/funcionarios}" target="content-frame">Funcionarios</a></li>
+						                   <li><a th:href="@{/marcas}" target="content-frame">Marcas</a></li>
+						                   <li><a th:href="@{/categorias}" target="content-frame">Categorías</a></li>
+						                   <li><a th:href="@{/productos}" target="content-frame">Productos</a></li>
+						                   <li><a th:href="@{/proveedores}" target="content-frame">Proveedores</a></li>
+						               </ul>
+						           </li>
+           
+
+            <!-- Grupo: Compras -->
+            <li class="menu-group">
+                <div class="menu-header">
+                    <span class="icon">🛍️</span>
+                    <span class="menu-text">Compras</span>
+                    <span class="chevron">▼</span>
+                </div>
+                <ul class="menu-items">
+                    <li><a href="#" target="content-frame">Registrar Compra</a></li>
+                </ul>
+            </li>
+
+            <!-- Grupo: Ventas -->
+            <li class="menu-group">
+                <div class="menu-header">
+                    <span class="icon">🛒</span>
+                    <span class="menu-text">Ventas</span>
+                    <span class="chevron">▼</span>
+                </div>
+                <ul class="menu-items">
+                    <li><a href="#" target="content-frame">Registrar Venta</a></li>
+                </ul>
+            </li>
+
+            <!-- Grupo: Facturaciones -->
+            <li class="menu-group">
+                <div class="menu-header">
+                    <span class="icon">🧾</span>
+                    <span class="menu-text">Facturaciones</span>
+                    <span class="chevron">▼</span>
+                </div>
+                <ul class="menu-items">
+                    <li><a href="#" target="content-frame">Emitir Factura</a></li>
+                    <li><a href="#" target="content-frame">Timbrados</a></li>
+                </ul>
+            </li>
+
+            <!-- Grupo: Reportes -->
+            <li class="menu-group">
+                <div class="menu-header">
+                    <span class="icon">📊</span>
+                    <span class="menu-text">Reportes</span>
+                    <span class="chevron">▼</span>
+                </div>
+                <ul class="menu-items">
+                    <li><a href="#" target="content-frame">Reporte de Ventas</a></li>
+                    <li><a href="#" target="content-frame">Reporte de Compras</a></li>
+                </ul>
+            </li>
+			
+        </ul>
+    </aside>
+
+    <!-- ÁREA DE CONTENIDO PRINCIPAL -->
+    <main class="main-content">
+        <!-- IFRAME para cargar las pantallas en el centro -->
+        <iframe name="content-frame" class="content-frame" th:src="@{/dashboard}"></iframe>
+    </main>
+
+    <!-- SCRIPT PARA EL MENÚ ACORDEÓN Y EL BOTÓN RESPONSIVO -->
+    <script>
+        const btnToggle = document.getElementById('btn-toggle');
+        const sidebar = document.getElementById('sidebar');
+        const menuHeaders = document.querySelectorAll('.menu-header');
+
+        // Alternar barra lateral
+        btnToggle.addEventListener('click', () => {
+            sidebar.classList.toggle('collapsed');
+            
+            // Si reducimos la barra, cerramos todos los submenús por estética
+            if (sidebar.classList.contains('collapsed')) {
+                document.querySelectorAll('.menu-group.active').forEach(group => {
+                    group.classList.remove('active');
+                    group.querySelector('.menu-items').classList.remove('show');
+                });
+            }
+        });
+
+        // Lógica de Acordeón para grupos de menú
+        menuHeaders.forEach(header => {
+            header.addEventListener('click', () => {
+                // Si la barra está colapsada, no dejamos abrir los submenús allí mismo 
+                // para mantener un diseño simple (otra alternativa sería abrirlos flotando)
+                if (sidebar.classList.contains('collapsed')) {
+                    sidebar.classList.remove('collapsed');
+                }
+
+                const group = header.parentElement;
+                const items = group.querySelector('.menu-items');
+
+                // Cerrar otros abiertos
+                document.querySelectorAll('.menu-group.active').forEach(activeGroup => {
+                    if (activeGroup !== group) {
+                        activeGroup.classList.remove('active');
+                        activeGroup.querySelector('.menu-items').classList.remove('show');
+                    }
+                });
+
+                // Alternar el actual
+                group.classList.toggle('active');
+                items.classList.toggle('show');
+            });
+        });
+        
+        // Manejo sencillo de clase ".active" en los enlaces internos
+        document.querySelectorAll('.menu-items a').forEach(link => {
+            link.addEventListener('click', function() {
+                document.querySelectorAll('.menu-items a').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

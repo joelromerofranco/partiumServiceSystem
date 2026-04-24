@@ -1,0 +1,268 @@
+@import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap');
+
+:root {
+    --primary-color: rgb(0, 0, 128); /* Azul muy oscuro para el Sidebar */
+    --primary-hover: rgb(0, 128, 0); /* Sidebar hover */
+    --accent-color: rgb(0, 0, 128); /* Color alegre para resaltar */
+    --bg-color: #f4f7f6; /* Fondo grisáceo suave */
+    --sidebar-width: 250px;
+    --sidebar-collapsed-width: 70px;
+    --text-color: #333;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    display: flex;
+    height: 100vh;
+    overflow: hidden; /* Evitar scrolls innecesarios globalmente */
+}
+
+/* ── SIDEBAR ── */
+.sidebar {
+    width: var(--sidebar-width);
+    background-color: var(--primary-color);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    transition: width 0.3s ease; /* Animación de despliegue/pliegue */
+    overflow: hidden; /* Ocultar texto largo cuando colapsa */
+}
+
+.sidebar.collapsed {
+    width: var(--sidebar-collapsed-width);
+}
+
+.sidebar-header {
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 1rem;
+    background-color: #1a252f;
+    border-bottom: 1px solid #34495e;
+}
+
+.sidebar-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    white-space: nowrap;
+    opacity: 1;
+    transition: opacity 0.3s;
+}
+
+.sidebar.collapsed .sidebar-title {
+    opacity: 0;
+    display: none;
+}
+
+.sidebar.collapsed .sidebar-header {
+    justify-content: center;
+    padding: 0;
+}
+
+.toggle-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    outline: none;
+}
+
+.toggle-btn:hover {
+    color: var(--accent-color);
+}
+
+.sidebar-menu {
+    list-style: none;
+    margin-top: 1rem;
+    flex: 1; /* Ocupar el resto del sidebar */
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+/* Scrollbar dark for sidebar */
+.sidebar-menu::-webkit-scrollbar {
+    width: 6px;
+}
+.sidebar-menu::-webkit-scrollbar-thumb {
+    background: #455a64;
+    border-radius: 4px;
+}
+
+.menu-group {
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.menu-header {
+    display: flex;
+    align-items: center;
+    padding: 1rem;
+    color: #ecf0f1;
+    cursor: pointer;
+    font-size: 1.05rem;
+    transition: background-color 0.2s;
+    user-select: none;
+}
+
+.menu-header:hover {
+    background-color: var(--primary-hover);
+}
+
+.chevron {
+    margin-left: auto;
+    transition: transform 0.3s ease;
+    font-size: 0.8rem;
+}
+
+.menu-group.active .chevron {
+    transform: rotate(180deg);
+}
+
+.menu-items {
+    list-style: none;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+    background-color: #1f2d3d; /* Fondo más oscuro para submenús */
+}
+
+.menu-items.show {
+    max-height: 500px;
+}
+
+.menu-items a {
+    color: #bdc3c7;
+    text-decoration: none;
+    display: block;
+    padding: 0.8rem 1rem 0.8rem 3.5rem;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+    white-space: nowrap;
+}
+
+.menu-items a:hover, .menu-items a.active {
+    background-color: var(--primary-hover);
+    color: white;
+}
+
+.icon {
+    font-size: 1.2rem;
+    min-width: 30px;
+    text-align: center;
+    margin-right: 15px;
+}
+
+.sidebar.collapsed .icon {
+    margin-right: 0;
+}
+
+.menu-text {
+    opacity: 1;
+    transition: opacity 0.3s;
+}
+
+.sidebar.collapsed .menu-text {
+    opacity: 0;
+    display: none;
+}
+
+.sidebar.collapsed .chevron {
+    display: none;
+}
+
+.sidebar.collapsed .sidebar-menu {
+    overflow: hidden;
+}
+
+.sidebar.collapsed .menu-header {
+    justify-content: center;
+}
+
+/* ── CONTENIDO PRINCIPAL (MAIN) ── */
+.main-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Scroll es manejado por el iframe */
+    transition: margin-left 0.3s ease;
+}
+
+.content-frame {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    border: none;
+    background-color: transparent;
+    display: block;
+}
+
+.topbar {
+    height: 60px;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    display: flex;
+    align-items: center;
+    padding: 0 2rem;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    flex-shrink: 0;
+}
+
+.dashboard {
+    padding: 2rem;
+    /* Un Grid básico por si quieres poner "Tarjetas/Botones" en el medio de la pantalla después */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+/* Diseño de tarjetas para el dashboard (home) */
+.card-home {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    text-align: center;
+    border-top: 4px solid var(--accent-color);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card-home:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+}
+
+.card-home h3 {
+    margin-bottom: 1rem;
+    color: var(--primary-color);
+}
+
+.card-home p {
+    color: #666;
+    margin-bottom: 1.5rem;
+}
+
+.btn-card {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: var(--accent-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+
+.btn-card:hover {
+    background-color: #006699;
+}

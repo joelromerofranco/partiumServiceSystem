@@ -1,0 +1,30 @@
+* {
+	       /* Ajuste para que Tom Select combine con el estilo del formulario */
+	       .ts-wrapper .ts-control {
+	           border: 1px solid #dce0e6 !important;
+	           border-radius: 5px !important;
+	           padding: 8px 10px !important;
+	           font-size: .9rem !important;
+	           min-height: 38px !important;
+	           display: flex;
+	           align-items: center;
+	       }
+	       .ts-wrapper.focus .ts-control {
+	           border-color: #3498db !important;
+	           box-shadow: none !important;
+	       }
+	       /* Eliminar el efecto de "campo abajo" - Integrar el input */
+	       .ts-wrapper .ts-control > input {
+	           border: none !important;
+	           padding: 0 !important;
+	           margin: 0 !important;
+	           background: transparent !important;
+	           box-shadow: none !important;
+	           width: 100% !important;
+	           display: inline-block !important;
+	       }
+	       /* Ocultar el texto seleccionado cuando se está escribiendo */
+	       .ts-wrapper.dropdown-active .ts-control > div {
+	           opacity: 0.1;
+	      
+}}

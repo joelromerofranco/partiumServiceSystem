@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timbrados</title>
+    <link rel="stylesheet" th:href="@{/css/estilosForm.css}">
+</head>
+
+<body>
+
+    <h1>Registros de Timbrados</h1>
+
+    <!-- Mensajes de Feedback -->
+    <div th:if="${mensaje}" class="alert alert-success" th:text="${mensaje}"></div>
+    <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+    <!-- FORMULARIO-->
+    <div class="card" th:if="${mostrarFormulario}">
+        <h2 th:text="${timbrado.idTimbrado != 0} ? 'Editar Timbrado' : 'Nueva Timbrado'">
+            Nuevo Timbrado
+        </h2>
+
+        <form th:action="@{/timbrados/guardar}" th:object="${timbrado}" method="post">
+
+            <!-- ID oculto para edición -->
+            <input type="hidden" th:field="*{idTimbrado}" />
+
+            <div class="grid">
+
+                <!-- ── donde se llena los Datos  ── -->
+                <div class="section-label">Datos del timbrado</div>
+
+                <div class="field">
+                    <label for="numeroTimbrado">N° Timbrado</label>
+                    <input type="text" id="numeroTimbrado" th:field="*{numeroTimbrado}" maxlength="60" required />
+                </div>
+
+                <div class="field">
+                    <label for="inicioDoc">Inicio del documento</label>
+                    <input type="text" id="inicioDoc" th:field="*{inicioDoc}" maxlength="100" required />
+                </div>
+                <div class="field">
+                    <label for="estado">Estado</label>
+                    <select id="estado" th:field="*{estado}" required>
+                        <option value="true">Activo</option>
+                        <option value="false">Inactivo</option>
+                    </select>
+                </div>
+
+            </div><!-- /grid -->
+
+            <div class="botones">
+                <button type="submit" class="btn-guardar"
+                    th:text="${categoria.idCategoria != 0} ? '✏ Editar' : '💾 Guardar'">💾 Guardar</button>
+                <a href="/categorias" class="btn btn-cancelar">✖ Cancelar</a>
+            </div>
+
+        </form>
+    </div>
+
+    <!-- Lista de los que se an registrado en la  DB-->
+    <div class="card" th:if="${!mostrarFormulario}">
+        <h2>Listado de Categoria</h2>
+
+        <div class="botones" style="margin-bottom: 1rem;">
+            <a href="/categorias/nuevo" class="btn btn-nuevo">➕ Nuevo</a>
+        </div>
+
+        <!-- Buscador -->
+        <form th:action="@{/categorias}" method="get" class="buscador">
+            <input type="text" name="filtro" placeholder="Buscar..."
+                th:value="${filtro}" />
+            <button type="submit" class="btn-buscar">🔍 Buscar</button>
+            <a href="/categorias" class="btn-buscar" style="background:#95a5a6;">🧹 Limpiar</a>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Abreviatura</th>
+                    <th>Descripción</th>
+                    <th>Estado</th>
+					<th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:if="${#lists.isEmpty(categorias)}">
+                    <td colspan="5" class="sin-datos">No hay categoria registrados.</td>
+                </tr>
+                <tr th:each="c : ${categorias}">
+                    <td th:text="${c.idCategoria}"></td>
+                    <td th:text="${c.abreviatura}"></td>
+                    <td th:text="${c.descripcion}"></td>
+                    <td th:text="${c.estado ? 'Activo' : 'Inactivo'}"></td>
+                    <td class="acciones">
+                        <a th:href="@{/categorias/editar/{id}(id=${c.idCategoria})}" class="btn-editar">✍🏻Editar</a>
+                        <a th:href="@{/categorias/eliminar/{id}(id=${c.idCategoria})}" class="btn-eliminar"
+                            onclick="return confirm('¿Confirma eliminar este Registro?')">🚮Eliminar</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+   
+</body>
+
+</html>
