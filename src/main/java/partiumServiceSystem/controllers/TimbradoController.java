@@ -1,4 +1,4 @@
-/*package partiumServiceSystem.controllers;
+package partiumServiceSystem.controllers;
 
 import java.util.List;
 
@@ -13,20 +13,20 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import partiumServiceSystem.dao.CategoriaDao;
-import partiumServiceSystem.entidades.Categoria;
+import partiumServiceSystem.dao.TimbradoDao;
+import partiumServiceSystem.entidades.Timbrado;
 
 @Controller
-@RequestMapping("/categorias")
+@RequestMapping("/timbrados")
 public class TimbradoController {
 
     @Autowired
-    private CategoriaDao categoriaDao;
+    private TimbradoDao timbradoDao;
     // Al inicializar el controlador y cargar la tabla
     @GetMapping
     public String inicializar(@RequestParam(required = false) String filtro, Model model) {
-        if (!model.containsAttribute("categoria")) {
-            model.addAttribute("categoria", new Categoria());
+        if (!model.containsAttribute("timbrado")) {
+            model.addAttribute("timbrado", new Timbrado());
         }
         if (filtro != null && !filtro.isBlank()) {
             consultarCategoria(filtro, model);
@@ -35,61 +35,59 @@ public class TimbradoController {
         }
         model.addAttribute("filtro", filtro);
         model.addAttribute("mostrarFormulario", false);
-        return "categorias/formulario";
+        return "timbrados/formulario";
     }
 
-    // Helper para recuperar todos los registros 
+    // para recuperar todos los registros 
     private void recuperarTodo(Model model) {
-        List<Categoria> lista = categoriaDao.recuperarTodo();
-        model.addAttribute("categorias", lista);
+        List<Timbrado> lista = timbradoDao.recuperarTodo();
+        model.addAttribute("timbrados", lista);
     }
 
-    // Helper para consultar por filtro 
+    // para consultar por filtro 
     private void consultarCategoria(String filtro, Model model) {
-        List<Categoria> lista = categoriaDao.recuperarPorFiltro(filtro);
-        model.addAttribute("categorias", lista);
+        List<Timbrado> lista = timbradoDao.recuperarPorFiltro(filtro);
+        model.addAttribute("timbrados", lista);
     }
 
     // Mostrar formulario para nuevo 
     @GetMapping("/nuevo")
     public String nuevo(Model model) {
-        if (!model.containsAttribute("categoria")) {
-            model.addAttribute("categoria", new Categoria());
+        if (!model.containsAttribute("timbrado")) {
+            model.addAttribute("timbrado", new Timbrado());
         }
         recuperarTodo(model);
         model.addAttribute("mostrarFormulario", true);
-        return "categorias/formulario";
+        return "timbrados/formulario";
     }
 
     // Mostrar formulario para editar 
     @GetMapping("/editar/{id}")
     public String modificar(@PathVariable Integer id, Model model) {
-        Categoria categoria = categoriaDao.recuperarPorId(id);
-        if (categoria == null) {
-            return "redirect:/categorias/nuevo";
+        Timbrado timbrado = timbradoDao.recuperarPorId(id);
+        if (timbrado == null) {
+            return "redirect:/timbrados/nuevo";
         }
-        model.addAttribute("categoria", categoria);
+        model.addAttribute("timbrado", timbrado);
         recuperarTodo(model);
         model.addAttribute("mostrarFormulario", true);
-        return "categorias/formulario";
+        return "timbrados/formulario";
     }
 
     // Guardar o actualizar 
     @PostMapping("/guardar")
-    public String guardar(@ModelAttribute Categoria categoria, RedirectAttributes redirectAttributes) {
+    public String guardar(@ModelAttribute Timbrado timbrado, RedirectAttributes redirectAttributes) {
         try {
-            if (!validarCampos(categoria, redirectAttributes)) {
-                // En Spring MVC, si falla la validación, solemos redirigir con errores
-                // o volver a mostrar la vista. Aquí redirigimos para simplificar el flujo ABM.
-                return "redirect:/categorias/nuevo";
+            if (!validarCampos(timbrado, redirectAttributes)) {
+                return "redirect:/timbrados/nuevo";
             }
-            categoriaDao.guardar(categoria);
+            timbradoDao.guardar(timbrado);
 			redirectAttributes.addFlashAttribute("mensaje", "Registro guardado correctamente");
-            return "redirect:/categorias";
+            return "redirect:/timbrados";
         } catch (Exception e) {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("error", "Error al guardar: " + e.getMessage());
-            return "redirect:/categorias/nuevo";
+            return "redirect:/timbrados/nuevo";
         }
     }
 
@@ -97,29 +95,22 @@ public class TimbradoController {
     @GetMapping("/eliminar/{id}")
     public String eliminar(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
         try {
-            Categoria categoria = categoriaDao.recuperarPorId(id);
-            if (categoria != null) {
-                categoriaDao.eliminar(categoria);
+            Timbrado timbrado = timbradoDao.recuperarPorId(id);
+            if (timbrado != null) {
+                timbradoDao.eliminar(timbrado);
                 redirectAttributes.addFlashAttribute("mensaje", "Registro eliminado correctamente");
             }
         } catch (Exception e) {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("error", "Error al eliminar: " + e.getMessage());
         }
-        return "redirect:/categorias";
+        return "redirect:/timbrados";
     }
 
     // Validación lógica 
-    private boolean validarCampos(Categoria c, RedirectAttributes redirectAttributes) {
-        if (c.getAbreviatura() == null || c.getAbreviatura().isBlank()) {
-            redirectAttributes.addFlashAttribute("error", "El campo está vacío");
-            return false;
-        }
-        if (c.getDescripcion() == null || c.getDescripcion().isBlank()) {
-            redirectAttributes.addFlashAttribute("error", "El campo está vacío");
-            return false;
-        }
-        if (c.getEstado() == null ) {
+    private boolean validarCampos(Timbrado t, RedirectAttributes redirectAttributes) {
+        
+        if (t.getEstado() == null ) {
             redirectAttributes.addFlashAttribute("error", "El campo está vacío");
             return false;
         
@@ -133,4 +124,3 @@ public class TimbradoController {
         return "redirect:/";
     }
 }
-*/

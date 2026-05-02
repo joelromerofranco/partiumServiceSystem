@@ -1,24 +1,22 @@
-/*package partiumServiceSystem.dao;
+package partiumServiceSystem.dao;
 
 import java.util.List;
 
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
-
-import partiumServiceSystem.entidades.Categoria;
+import partiumServiceSystem.entidades.Timbrado;
 
 @Repository
-public class TimbradoDao extends GenericDao<Categoria> {
+public class TimbradoDao extends GenericDao<Timbrado> {
 
     public TimbradoDao() {
-        super(Categoria.class);
+        super(Timbrado.class);
     }
 
     @Override
-    public List<Categoria> recuperarPorFiltro(String filtro) {
-        String hql = "from Categoria "
-                + "where upper(abreviatura) like :filtro "
-                + "or upper(descripcion) like :filtro ";
+    public List<Timbrado> recuperarPorFiltro(String filtro) {
+        String hql = "from Timbrado "
+                + "where upper(estado) like :filtro ";
 
         Boolean estado = null;
 
@@ -28,13 +26,13 @@ public class TimbradoDao extends GenericDao<Categoria> {
             hql += "or estado = false ";
         }
 
-        hql += "order by idCategoria";
+        hql += "order by idTimbrado";
 
-        Query<Categoria> query = getSession().createQuery(hql, Categoria.class);
+        Query<Timbrado> query = getSession().createQuery(hql, Timbrado.class);
         query.setParameter("filtro", "%" + filtro.toUpperCase() + "%");
 
         return query.getResultList();
-    }
+    }}
 
     /**
      * Esta parte es para ejemplo  
