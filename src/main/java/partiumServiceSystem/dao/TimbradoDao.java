@@ -32,7 +32,19 @@ public class TimbradoDao extends GenericDao<Timbrado> {
         query.setParameter("filtro", "%" + filtro.toUpperCase() + "%");
 
         return query.getResultList();
-    }}
+    }
+
+    public Timbrado recuperarActivoPorProveedor(Integer idProveedor) {
+        String hql = "from Timbrado where proveedor.idProveedor = :idProveedor and estado = 'true' "
+                   + "and current_date between inicioVigencia and finVigencia "
+                   + "order by idTimbrado desc";
+        Query<Timbrado> query = getSession().createQuery(hql, Timbrado.class);
+        query.setParameter("idProveedor", idProveedor);
+        query.setMaxResults(1);
+        return query.uniqueResult();
+    }
+}
+
 
     /**
      * Esta parte es para ejemplo  

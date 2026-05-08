@@ -23,7 +23,7 @@ public class FuncionarioController {
     @Autowired
     private FuncionarioDao funcionarioDao;
 
-    // Al inicializar el controlador y cargar la tabla
+    // Equivalente a inicializar el controlador y cargar la tabla
     @GetMapping
     public String inicializar(@RequestParam(required = false) String filtro, Model model) {
         if (!model.containsAttribute("funcionario")) {
@@ -35,34 +35,30 @@ public class FuncionarioController {
             recuperarTodo(model);
         }
         model.addAttribute("filtro", filtro);
-        model.addAttribute("mostrarFormulario", false);
         return "funcionarios/formulario";
     }
 
-    // Helper para recuperar todos los registros 
+    // Helper para recuperar todos los registros (recuperarTodo en el ejemplo)
     private void recuperarTodo(Model model) {
         List<Funcionario> lista = funcionarioDao.recuperarTodo();
         model.addAttribute("funcionarios", lista);
     }
 
-    // Helper para consultar por filtro 
+    // Helper para consultar por filtro (consultarBombero en el ejemplo)
     private void consultarFuncionario(String filtro, Model model) {
         List<Funcionario> lista = funcionarioDao.recuperarPorFiltro(filtro);
         model.addAttribute("funcionarios", lista);
     }
 
-    // Mostrar formulario para nuevo 
+    // Mostrar formulario para nuevo (nuevo en el ejemplo)
     @GetMapping("/nuevo")
     public String nuevo(Model model) {
-        if (!model.containsAttribute("funcionario")) {
-            model.addAttribute("funcionario", new Funcionario());
-        }
+        model.addAttribute("funcionario", new Funcionario());
         recuperarTodo(model);
-        model.addAttribute("mostrarFormulario", true);
         return "funcionarios/formulario";
     }
 
-    // Mostrar formulario para editar 
+    // Mostrar formulario para editar (modificar en el ejemplo)
     @GetMapping("/editar/{id}")
     public String modificar(@PathVariable Integer id, Model model) {
         Funcionario funcionario = funcionarioDao.recuperarPorId(id);
@@ -71,11 +67,10 @@ public class FuncionarioController {
         }
         model.addAttribute("funcionario", funcionario);
         recuperarTodo(model);
-        model.addAttribute("mostrarFormulario", true);
         return "funcionarios/formulario";
     }
 
-    // Guardar o actualizar 
+    // Guardar o actualizar (guardar en el ejemplo)
     @PostMapping("/guardar")
     public String guardar(@ModelAttribute Funcionario funcionario, RedirectAttributes redirectAttributes) {
         try {
@@ -86,7 +81,7 @@ public class FuncionarioController {
             }
             funcionarioDao.guardar(funcionario);
             redirectAttributes.addFlashAttribute("mensaje", "Funcionario guardado correctamente");
-            return "redirect:/funcionarios";
+            return "redirect:/funcionarios/nuevo";
         } catch (Exception e) {
             e.printStackTrace();
             redirectAttributes.addFlashAttribute("error", "Error al guardar: " + e.getMessage());
@@ -94,7 +89,7 @@ public class FuncionarioController {
         }
     }
 
-    // Eliminar 
+    // Eliminar (eliminar en el ejemplo)
     @GetMapping("/eliminar/{id}")
     public String eliminar(@PathVariable Integer id, RedirectAttributes redirectAttributes) {
         try {
@@ -110,7 +105,7 @@ public class FuncionarioController {
         return "redirect:/funcionarios";
     }
 
-    // Validación lógica 
+    // Validación lógica (validarCampos en el ejemplo)
     private boolean validarCampos(Funcionario f, RedirectAttributes redirectAttributes) {
         if (f.getNombre() == null || f.getNombre().isBlank()) {
             redirectAttributes.addFlashAttribute("error", "El campo Nombre está vacío");
@@ -125,7 +120,7 @@ public class FuncionarioController {
             return false;
         }
 
-        // Verificación de duplicados 
+        // Verificación de duplicados (similar al ejemplo)
         Funcionario existente = funcionarioDao.recuperarPorFiltro(f.getDocumento()).stream()
                 .filter(p -> p.getDocumento().equals(f.getDocumento()))
                 .findFirst().orElse(null);
@@ -142,7 +137,7 @@ public class FuncionarioController {
         return true;
     }
 
-    // Salir 
+    // Salir (salir en el ejemplo - redirigir al inicio o cerrar sesión/ventana)
     @GetMapping("/salir")
     public String salir() {
         return "redirect:/";

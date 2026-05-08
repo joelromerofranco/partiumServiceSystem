@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import partiumServiceSystem.dao.ProveedorDao;
 import partiumServiceSystem.dao.TimbradoDao;
 import partiumServiceSystem.entidades.Timbrado;
 
@@ -22,11 +24,16 @@ public class TimbradoController {
 
     @Autowired
     private TimbradoDao timbradoDao;
+
+    @Autowired
+    private ProveedorDao proveedorDao;
     // Al inicializar el controlador y cargar la tabla
     @GetMapping
     public String inicializar(@RequestParam(required = false) String filtro, Model model) {
         if (!model.containsAttribute("timbrado")) {
-            model.addAttribute("timbrado", new Timbrado());
+            Timbrado t = new Timbrado();
+            t.setEstado("true");
+            model.addAttribute("timbrado", t);
         }
         if (filtro != null && !filtro.isBlank()) {
             consultarCategoria(filtro, model);
@@ -35,6 +42,7 @@ public class TimbradoController {
         }
         model.addAttribute("filtro", filtro);
         model.addAttribute("mostrarFormulario", false);
+        model.addAttribute("proveedores", proveedorDao.recuperarTodo());
         return "timbrados/formulario";
     }
 
@@ -54,10 +62,13 @@ public class TimbradoController {
     @GetMapping("/nuevo")
     public String nuevo(Model model) {
         if (!model.containsAttribute("timbrado")) {
-            model.addAttribute("timbrado", new Timbrado());
+            Timbrado t = new Timbrado();
+            t.setEstado("true");
+            model.addAttribute("timbrado", t);
         }
         recuperarTodo(model);
         model.addAttribute("mostrarFormulario", true);
+        model.addAttribute("proveedores", proveedorDao.recuperarTodo());
         return "timbrados/formulario";
     }
 
@@ -71,6 +82,7 @@ public class TimbradoController {
         model.addAttribute("timbrado", timbrado);
         recuperarTodo(model);
         model.addAttribute("mostrarFormulario", true);
+        model.addAttribute("proveedores", proveedorDao.recuperarTodo());
         return "timbrados/formulario";
     }
 
@@ -123,4 +135,11 @@ public class TimbradoController {
     public String salir() {
         return "redirect:/";
     }
+
+    @GetMapping("/activo/{idProveedor}")
+    @ResponseBody
+    public Timbrado obtenerActivo(@PathVariable Integer idProveedor) {
+        return timbradoDao.recuperarActivoPorProveedor(idProveedor);
+    }
 }
+

@@ -35,6 +35,10 @@ public class Timbrado {
 	@Column(length = 45, nullable = false)
 	private String estado;
 
+	@ManyToOne
+	@JoinColumn(name = "id_proveedor")
+	private Proveedor proveedor;
+
 	public Timbrado() {
 	}
 
@@ -95,9 +99,18 @@ public class Timbrado {
 		this.estado = estado;
 	}
 
+	public Proveedor getProveedor() {
+		return proveedor;
+	}
+
+	public void setProveedor(Proveedor proveedor) {
+		this.proveedor = proveedor;
+	}
+
 	@Override
 	public String toString() {
 		return "Timbrado [idTimbrado=" + idTimbrado + ", numeroTimbrado=" + numeroTimbrado
-				+ ", inicioDoc=" + inicioDoc + ", finalDoc=" + finalDoc + "]";
+				+ ", inicioDoc=" + inicioDoc + ", finalDoc=" + finalDoc + ", proveedor=" + proveedor + "]";
 	}
 }
+

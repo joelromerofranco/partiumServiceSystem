@@ -27,7 +27,9 @@ public class MarcaController {
 	@GetMapping
 	public String inicializar(@RequestParam(required = false) String filtro, Model model) {
 		if (!model.containsAttribute("marca")) {
-			model.addAttribute("marca", new Marca());
+			Marca m = new Marca();
+			m.setEstado("true");
+			model.addAttribute("marca", m);
 		}
 		if (filtro != null && !filtro.isBlank()) {
 			consultarMarca(filtro, model);
@@ -55,7 +57,9 @@ public class MarcaController {
 	@GetMapping("/nuevo")
 	public String nuevo(Model model) {
 		if (!model.containsAttribute("marca")) {
-			model.addAttribute("marca", new Marca());
+			Marca m = new Marca();
+			m.setEstado("true");
+			model.addAttribute("marca", m);
 		}
 		recuperarTodo(model);
 		model.addAttribute("mostrarFormulario", true);

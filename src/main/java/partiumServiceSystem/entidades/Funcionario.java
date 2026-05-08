@@ -67,5 +67,8 @@ public class Funcionario extends Persona {
 	public String toString() {
 		return "Funcionario [estado=" + estado + ", fechaIngreso=" + fechaIngreso + ", cargo=" + cargo + "]";
 	}
+	
+	
+	
 
 }

@@ -26,8 +26,8 @@ public class Producto {
 	@Column(name = "precio_venta", nullable = false)
 	private Double precioVenta;
 
-	@Column(nullable = false)
-	private Boolean estado;
+	@Column(nullable = false, length = 45)
+	private String estado;
 
 	@ManyToOne
 	@JoinColumn(name = "marca_id", nullable = false)
@@ -89,11 +89,11 @@ public class Producto {
 		this.precioVenta = precioVenta;
 	}
 
-	public Boolean getEstado() {
+	public String getEstado() {
 		return estado;
 	}
 
-	public void setEstado(Boolean estado) {
+	public void setEstado(String estado) {
 		this.estado = estado;
 	}
 

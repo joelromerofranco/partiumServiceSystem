@@ -35,6 +35,7 @@ public class ProductoController {
         Producto p = new Producto();
         p.setMarca(new Marca());
         p.setCategoria(new Categoria());
+        p.setEstado("true");
         return p;
     }
     @GetMapping

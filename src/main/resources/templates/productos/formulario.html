@@ -5,13 +5,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Productos</title>
-    <!-- Estilos base -->
     <link rel="stylesheet" th:href="@{/css/estilosForm.css}">
 	<link rel="stylesheet" th:href="@{/css/estilobuscador.css}">
-    <!-- Tom Select (Buscador en selectores) -->
-    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
-   
+    
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/autonumeric@4.6.0/dist/autoNumeric.min.js"></script>
 </head>
+
 
 <body>
 
@@ -58,29 +61,28 @@
 
                 <div class="field">
                     <label for="precioVenta">Precio Venta</label>
-                    <input type="number" step="00.01" id="precioVenta" th:field="*{precioVenta}" required />
+                    <input type="text" id="precioVenta" th:field="*{precioVenta}" required />
                 </div>
 
                 <div class="field">
                     <label for="marca">Marca</label>
-                    <select id="marca" th:field="*{marca.idMarca}" required>
-                        <option value="0" disabled selected>Seleccione una marca...</option>
+                    <select id="marca" th:field="*{marca.idMarca}" required class="select2">
+                        <option value="0" disabled>Seleccione una marca...</option>
                         <option th:each="m : ${marcas}" th:value="${m.idMarca}" th:text="${m.descripcion}"></option>
                     </select>
                 </div>
 
                 <div class="field">
                     <label for="categoria">Categoria</label>
-                    <select id="categoria" th:field="*{categoria.idCategoria}" required>
-                        <option value="0" disabled selected>Seleccione una categoria...</option>
+                    <select id="categoria" th:field="*{categoria.idCategoria}" required class="select2">
+                        <option value="0" disabled>Seleccione una categoria...</option>
                         <option th:each="c : ${categorias}" th:value="${c.idCategoria}" th:text="${c.descripcion}"></option>
                     </select>
                 </div>
 
                 <div class="field">
                     <label for="estado">Estado</label>
-                    <select id="estado" th:field="*{estado}" required>
-                        <option value="" disabled selected>Seleccione...</option>
+                    <select id="estado" th:field="*{estado}" required class="select2">
                         <option value="true">Activo</option>
                         <option value="false">Inactivo</option>
                     </select>
@@ -148,8 +150,6 @@
         </table>
     </div>
    
-    <!-- Tom Select JS -->
-    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
     <!-- Lógica personalizada -->
     <script th:src="@{/js/productos.js}"></script>
 </body>

@@ -17,8 +17,8 @@ public class Marca {
 	@Column(length = 10)
 	private String abreviatura;
 
-	@Column(nullable = false)
-	private Boolean estado;
+	@Column(nullable = false, length = 45)
+	private String estado;
 
 	public Marca() {
 	}
@@ -48,11 +48,11 @@ public class Marca {
 		this.abreviatura = abreviatura;
 	}
 
-	public Boolean getEstado() {
+	public String getEstado() {
 		return estado;
 	}
 
-	public void setEstado(Boolean estado) {
+	public void setEstado(String estado) {
 		this.estado = estado;
 	}
 

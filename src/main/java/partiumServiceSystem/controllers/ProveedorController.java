@@ -27,7 +27,9 @@ public class ProveedorController {
 	@GetMapping
 	public String inicializar(@RequestParam(required = false) String filtro, Model model) {
 		if (!model.containsAttribute("proveedor")) {
-			model.addAttribute("proveedor", new Proveedor());
+			Proveedor p = new Proveedor();
+			p.setEstado("A");
+			model.addAttribute("proveedor", p);
 		}
 		if (filtro != null && !filtro.isBlank()) {
 			consultarProveedor(filtro, model);
@@ -55,7 +57,9 @@ public class ProveedorController {
 	@GetMapping("/nuevo")
 	public String nuevo(Model model) {
 		if (!model.containsAttribute("proveedor")) {
-			model.addAttribute("proveedor", new Proveedor());
+			Proveedor p = new Proveedor();
+			p.setEstado("A");
+			model.addAttribute("proveedor", p);
 		}
 		recuperarTodo(model);
 		model.addAttribute("mostrarFormulario", true);

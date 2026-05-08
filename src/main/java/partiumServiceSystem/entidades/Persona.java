@@ -140,9 +140,4 @@ public class Persona {
         this.sexo = sexo;
     }
 
-    @Override
-    public String toString() {
-        return "Persona [idPersona=" + idPersona + ", nombre=" + nombre + ", apellido=" + apellido + ", documento=" + documento + "]";
-    }
-
 }

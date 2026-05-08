@@ -19,7 +19,7 @@ public class Venta {
 	@Column(nullable = false)
 	private LocalDateTime fecha;
 
-	@Column(length = 45, nullable = false)
+	@Column(nullable = false, length = 45)
 	private String estado;
 
 	@Column(name = "forma_pago", length = 45)
@@ -61,6 +61,8 @@ public class Venta {
 	public void setFecha(LocalDateTime fecha) {
 		this.fecha = fecha;
 	}
+
+	
 
 	public String getEstado() {
 		return estado;

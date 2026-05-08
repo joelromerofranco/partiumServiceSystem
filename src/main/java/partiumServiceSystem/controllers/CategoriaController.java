@@ -26,7 +26,9 @@ public class CategoriaController {
     @GetMapping
     public String inicializar(@RequestParam(required = false) String filtro, Model model) {
         if (!model.containsAttribute("categoria")) {
-            model.addAttribute("categoria", new Categoria());
+            Categoria c = new Categoria();
+            c.setEstado("true");
+            model.addAttribute("categoria", c);
         }
         if (filtro != null && !filtro.isBlank()) {
             consultarCategoria(filtro, model);
@@ -54,7 +56,9 @@ public class CategoriaController {
     @GetMapping("/nuevo")
     public String nuevo(Model model) {
         if (!model.containsAttribute("categoria")) {
-            model.addAttribute("categoria", new Categoria());
+            Categoria c = new Categoria();
+            c.setEstado("true");
+            model.addAttribute("categoria", c);
         }
         recuperarTodo(model);
         model.addAttribute("mostrarFormulario", true);

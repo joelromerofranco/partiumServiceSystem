@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ventas</title>
+    <!-- para conectar con el estilo .css -->
+    <link rel="stylesheet" th:href="@{/css/estilosFormVenta.css}">
+    <link rel="stylesheet" th:href="@{/css/estilobuscador.css}">
+    <!-- Select2 parte para conectar con el css js del selector y el ultimo es para conectar con el que da formato a los numeros-->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/autonumeric@4.6.0/dist/autoNumeric.min.js"></script>
+
+</head>
+
+<body>
+
+    <h1>Gestión de Ventas</h1>
+
+    <!-- Mensajes de Feedback -->
+    <div th:if="${mensaje}" class="alert alert-success" th:text="${mensaje}"></div>
+    <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+    <!-- FORMULARIO DE VENTA -->
+    <div class="card" th:if="${mostrarFormulario}">
+        <h2 th:text="${venta.idFacturaVenta != 0} ? 'Editar Venta' : 'Nueva Venta'">Nueva Venta</h2>
+
+        <form th:action="@{/ventas/guardar}" th:object="${venta}" method="post" id="ventaForm">
+            <input type="hidden" th:field="*{idFacturaVenta}" />
+
+            <!-- CABECERA  -->
+            <div class="grid">
+                <div class="section-label">Datos de ventas</div>
+
+                <div class="field">
+                    <label for="fecha">Fecha</label>
+                    <input type="datetime-local" id="fecha" th:field="*{fecha}" required />
+                </div>
+
+                <div class="field">
+                    <label for="cliente">Cliente</label>
+                    <select id="cliente" th:field="*{cliente.idPersona}" required class="select2">
+                        <option value="0" disabled >Seleccione un cliente...</option>
+                        <option th:each="c : ${clientes}" th:value="${c.idPersona}" th:text="${c.nombre + ' ' + c.apellido}"></option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="funcionario">Vendedor</label>
+                    <select id="funcionario" th:field="*{funcionario.idPersona}" required class="select2">
+                        <option value="0" disabled>Seleccione un vendedor...</option>
+                        <option th:each="f : ${funcionarios}" th:value="${f.idPersona}" th:text="${f.nombre + ' ' + f.apellido}"></option>
+                    </select>
+                </div>
+
+                <div class="field">
+                    <label for="formaPago">Forma de Pago</label>
+                    <select id="formaPago" th:field="*{formaPago}" required class="select2">
+                        <option value="CONTADO">Contado</option>
+                        <option value="CREDITO">Crédito</option>
+                    </select>
+                </div>
+				<div class="field">
+				               <label for="estado">Estado</label>
+				                  <select id="estado" th:field="*{estado}" required class="select2">
+				                      <option value="true">Presupuesto</option>
+				                      <option value="false">Venta</option>
+				                  </select>
+				</div>
+            </div>
+
+            <!-- DETALLE (SELECTOR DE PRODUCTOS) -->
+            <div class="detail-card">
+                <div class="section-label">Agregar Productos</div>
+                <div class="grid">
+                    <div class="field col-2">
+                        <label>Producto</label>
+                        <select id="item-producto" class="select2">
+                            <option value="">Seleccione un producto...</option>
+                            <option th:each="p : ${productos}" 
+                                    th:value="${p.idProducto}" 
+                                    th:data-precio="${p.precioVenta}"
+                                    th:text="${p.descripcion + ' (Stock: ' + p.cantidad + ')'}"></option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>Cantidad</label>
+                        <input type="number" id="item-cantidad" value="1" min="1" />
+                    </div>
+					
+                    <div class="field col-2">
+                        <label>Precio Unitario</label>
+                        <input type="text" id="item-precio" readonly />
+                    </div>
+                    <div class="field" style="justify-content: flex-end;">
+                        <button type="button" class="btn-add" id="btn-agregar-item">➕ Agregar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TABLA DE DETALLES -->
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio Unitario</th>
+                            <th>Subtotal</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="detalle-tabla">
+                        <!-- Aquí se cargarán los items vía JS -->
+                        <tr class="sin-datos-item">
+                            <td colspan="5" style="text-align: center;">No hay productos agregados</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- TOTALES -->
+            <div class="total-section">
+                <span>TOTAL:</span>
+                <span id="total-venta-display">.Gs</span>
+                <input type="hidden" th:field="*{total}" id="total-venta-input" value="0" />
+                <!-- Input oculto para enviar los detalles como JSON -->
+                <input type="hidden" name="jsonDetalle" id="jsonDetalle" />
+            </div>
+
+            <div class="botones">
+                <button type="submit" class="btn-guardar">💾 Guardar Presupuesto</button>
+                <a href="/ventas" class="btn btn-cancelar">✖ Cancelar</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- LISTADO DE VENTAS -->
+    <div class="card" th:if="${!mostrarFormulario}">
+        <h2>Listado de Ventas</h2>
+        <div class="botones" style="margin-bottom: 1rem;">
+            <a href="/ventas/nuevo" class="btn btn-nuevo">➕ Nueva Venta</a>
+        </div>
+
+        <form th:action="@{/ventas}" method="get" class="buscador">
+            <input type="text" name="filtro" placeholder="Buscar por cliente o pago..." th:value="${filtro}" />
+            <button type="submit" class="btn-buscar">🔍 Buscar</button>
+        </form>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Fecha</th>
+                    <th>Cliente</th>
+                    <th>Forma Pago</th>
+                    <th>Total</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:if="${#lists.isEmpty(ventas)}">
+                    <td colspan="7" class="sin-datos">No hay ventas registradas.</td>
+                </tr>
+                <tr th:each="v : ${ventas}">
+                    <td th:text="${v.idFacturaVenta}"></td>
+                    <td th:text="${#temporals.format(v.fecha, 'dd/MM/yyyy HH:mm')}"></td>
+                    <td th:text="${v.cliente.nombre + ' ' + v.cliente.apellido}"></td>
+                    <td th:text="${v.formaPago}"></td>
+                    <td th:text="${v.total}"></td>
+                    <td th:text="${v.estado}"></td>
+                    <td class="acciones">
+                        <a href="#" class="btn-editar">👁 Ver</a>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!--Para estirar la lógica personalizada del js-->
+    <script th:src="@{/js/ventas.js}"></script>
+</body>
+
+</html>

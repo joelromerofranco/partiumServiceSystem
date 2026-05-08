@@ -22,8 +22,8 @@ public class Factura {
 	@Column(nullable = false)
 	private LocalDateTime fecha;
 
-	@Column(nullable = false)
-	private Boolean estado;
+	@Column(nullable = false, length = 45)
+	private String estado;
 
 	@ManyToOne
 	@JoinColumn(name = "venta_id", nullable = false)
@@ -61,11 +61,11 @@ public class Factura {
 		this.fecha = fecha;
 	}
 
-	public Boolean getEstado() {
+	public String getEstado() {
 		return estado;
 	}
 
-	public void setEstado(Boolean estado) {
+	public void setEstado(String estado) {
 		this.estado = estado;
 	}
 
