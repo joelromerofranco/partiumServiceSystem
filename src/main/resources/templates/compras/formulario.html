@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nueva Compra a Proveedor</title>
+    
+    <link rel="stylesheet" th:href="@{/css/estilosForm.css}">
+    <link rel="stylesheet" th:href="@{/css/estilobuscador.css}">
+</head>
+<body>
+
+    <h1>Nueva Compra a Proveedor</h1>
+
+    <div th:if="${mensaje}" class="alert alert-success" th:text="${mensaje}"></div>
+    <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+    <div class="card">
+        <h2>Registrar Compra</h2>
+
+        <form th:action="@{/compras/guardar}" method="post" id="formCompra">
+
+            <!-- Datos del Proveedor -->
+            <div class="section-label">DATOS DEL PROVEEDOR</div>
+            
+            <div class="field">
+                <label for="proveedorId">Proveedor</label>
+                <select name="proveedorId" id="proveedorId" class="form-control" required>
+                    <option value="">-- Seleccione un proveedor --</option>
+                    <option th:each="prov : ${proveedores}" 
+                            th:value="${prov.idProveedor}" 
+                            th:text="${prov.razonSocial} + ' (' + ${prov.documento} + ')'">
+                    </option>
+                </select>
+            </div>
+
+            <!-- Detalles de la Compra -->
+            <div class="section-label">DETALLES DE LA COMPRA</div>
+            
+            <div class="field">
+                <table class="table" id="tablaDetalles" style="width:100%;">
+                    <thead>
+                        <tr>
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio Unitario</th>
+                            <th>Subtotal</th>
+                            <th>Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bodyDetalles"></tbody>
+                </table>
+
+                <button type="button" class="btn-nuevo" onclick="agregarFila()" style="margin-top: 10px;">
+                    ➕ Agregar Producto
+                </button>
+            </div>
+
+            <!-- Total -->
+            <div style="text-align: right; margin: 20px 0; font-size: 1.6em;">
+                <strong>Total Compra: </strong>
+                <span id="totalGeneral" style="color: #27ae60; font-weight: bold;">0.00</span>
+            </div>
+
+            <div class="botones">
+                <button type="submit" class="btn-guardar">
+                    💾 Registrar Compra
+                </button>
+                <a th:href="@{/compras}" class="btn btn-cancelar">✖ Cancelar</a>
+            </div>
+
+        </form>
+    </div>
+
+	<script>
+	    let filaIndex = 0;
+
+	    // Cargar los productos una sola vez (esto es clave)
+	    let listaProductos = [];
+
+	    // Función para agregar fila
+	    function agregarFila() {
+	        const tbody = document.getElementById('bodyDetalles');
+	        const fila = document.createElement('tr');
+	        fila.id = `fila-${filaIndex}`;
+
+	        fila.innerHTML = `
+	            <td>
+	                <select class="form-control" name="detalles[${filaIndex}].productoId" 
+	                        onchange="calcularSubtotal(${filaIndex})" required>
+	                    <option value="">Seleccione un producto...</option>
+	                </select>
+	            </td>
+	            <td>
+	                <input type="number" class="form-control" name="detalles[${filaIndex}].cantidad" 
+	                       step="1" min="1" value="1" onchange="calcularSubtotal(${filaIndex})" required>
+	            </td>
+	            <td>
+	                <input type="number" class="form-control" name="detalles[${filaIndex}].precioUnitario" 
+	                       step="0.01" min="0.01" value="0.00" onchange="calcularSubtotal(${filaIndex})" required>
+	            </td>
+	            <td>
+	                <input type="text" class="form-control" id="subtotal-${filaIndex}" readonly value="0.00">
+	            </td>
+	            <td>
+	                <button type="button" class="btn-eliminar" onclick="eliminarFila(${filaIndex})">Eliminar</button>
+	            </td>
+	        `;
+
+	        tbody.appendChild(fila);
+
+	        // Llenar el select de productos
+	        const select = fila.querySelector('select');
+	        listaProductos.forEach(prod => {
+	            const option = document.createElement('option');
+	            option.value = prod.idProducto;
+	            option.textContent = prod.descripcion + ' (' + prod.sigla + ')';
+	            select.appendChild(option);
+	        });
+
+	        filaIndex++;
+	        calcularTotalGeneral();
+	    }
+
+	    function eliminarFila(index) {
+	        const fila = document.getElementById(`fila-${index}`);
+	        if (fila) fila.remove();
+	        calcularTotalGeneral();
+	    }
+
+	    function calcularSubtotal(index) {
+	        const fila = document.getElementById(`fila-${index}`);
+	        if (!fila) return;
+
+	        const cantidad = parseFloat(fila.querySelector('input[name$=".cantidad"]').value) || 0;
+	        const precio = parseFloat(fila.querySelector('input[name$=".precioUnitario"]').value) || 0;
+	        const subtotal = (cantidad * precio).toFixed(2);
+
+	        document.getElementById(`subtotal-${index}`).value = subtotal;
+	        calcularTotalGeneral();
+	    }
+
+	    function calcularTotalGeneral() {
+	        let total = 0;
+	        document.querySelectorAll('input[id^="subtotal-"]').forEach(el => {
+	            total += parseFloat(el.value) || 0;
+	        });
+	        document.getElementById('totalGeneral').textContent = total.toFixed(2);
+	    }
+
+	    // ==================== AL CARGAR LA PÁGINA ====================
+	    window.onload = function() {
+	        // Capturar los productos que Thymeleaf envía
+	        listaProductos = [
+	            <th:block th:each="prod : ${productos}">
+	                { idProducto: ${prod.idProducto}, sigla: '${prod.sigla}', descripcion: '${prod.descripcion}' }<th:block th:unless="${prodStat.last}">,</th:block>
+	            </th:block>
+	        ];
+	        
+	        // Agregar la primera fila
+	        agregarFila();
+	    };
+	</script>
+</body>
+</html>

@@ -4,122 +4,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Timbrados</title>
+    <title>Nueva Compra</title>
     <link rel="stylesheet" th:href="@{/css/estilosForm.css}">
 </head>
-
 <body>
+<div class="container mt-4">
+    <div class="card">
+        <div class="card-header bg-primary text-white">
+            <h4><i class="fas fa-shopping-cart"></i> Nueva Compra a Proveedor</h4>
+        </div>
+        <div class="card-body">
 
-    <h1>Registros de Timbrados</h1>
-
-    <!-- Mensajes de Feedback -->
-    <div th:if="${mensaje}" class="alert alert-success" th:text="${mensaje}"></div>
-    <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
-
-    <!-- FORMULARIO-->
-    <div class="card" th:if="${mostrarFormulario}">
-        <h2 th:text="${timbrado.idTimbrado != 0} ? 'Editar Timbrado' : 'Nueva Timbrado'">
-            Nuevo Timbrado
-        </h2>
-
-        <form th:action="@{/timbrados/guardar}" th:object="${timbrado}" method="post">
-
-            <!-- ID oculto para edición -->
-            <input type="hidden" th:field="*{idTimbrado}" />
-
-            <div class="grid">
-
-                <!-- ── donde se llena los Datos  ── -->
-                <div class="section-label">Datos del timbrado</div>
-
-                <div class="field">
-                    <label for="numeroTimbrado">N° Timbrado</label>
-                    <input type="text" id="numeroTimbrado" th:field="*{numeroTimbrado}" maxlength="60" required />
-                </div>
-				<div class="field">
-				    <label for="inicioVigencia">Inicio de Vigencia</label>
-				    <input type="date" id="inicioVigencia" th:field="*{inicioVigencia}" required />
-				</div>
-
-                <div class="field">
-                    <label for="inicioDoc">N° inicio de documento</label>
-                    <input type="text" id="inicioDoc" th:field="*{inicioDoc}" maxlength="100" required />
-                </div>
-                <div class="field">
-                    <label for="estado">Estado</label>
-                    <select id="estado" th:field="*{estado}" required>
-                        <option value="true">Activo</option>
-                        <option value="false">Inactivo</option>
-                    </select>
-                </div>
-				<div class="field">
-					<label for="finVigencia">Fin de vigencia</label>
-					<input type="date" id="finVigencia" th:field="*{finVigencia}" required />
-				</div>
-				<div class="field">
-				    <label for="finalDoc">N° final de documento</label>
-				    <input type="text" id="finalDoc" th:field="*{finalDoc}" maxlength="100" required />
-				</div>
-            </div><!-- /grid -->
-
-            <div class="botones">
-                <button type="submit" class="btn-guardar"
-                    th:text="${timbrado.idTimbrado != 0} ? '✏ Editar' : '💾 Guardar'">💾 Guardar</button>
-                <a href="/timbrados" class="btn btn-cancelar">✖ Cancelar</a>
+            <!-- Mensajes -->
+            <div th:if="${mensaje}" class="alert alert-success alert-dismissible">
+                <span th:text="${mensaje}"></span>
+            </div>
+            <div th:if="${error}" class="alert alert-danger alert-dismissible">
+                <span th:text="${error}"></span>
             </div>
 
-        </form>
-    </div>
+            <form th:action="@{/compras/guardar}" th:object="${compraDTO}" method="post" id="formCompra">
 
-    <!-- Lista de los que se an registrado en la  DB-->
-    <div class="card" th:if="${!mostrarFormulario}">
-        <h2>Listado de Timbrados</h2>
+                <!-- Proveedor -->
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <label class="form-label fw-bold">Proveedor:</label>
+                        <select th:field="*{proveedorId}" class="form-select" required>
+                            <option value="">-- Seleccione un proveedor --</option>
+                            <option th:each="prov : ${proveedores}" 
+                                    th:value="${prov.idProveedor}" 
+                                    th:text="${prov.razonSocial + ' (' + prov.persona.nombre + ')'}">
+                            </option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label fw-bold">Fecha:</label>
+                        <input type="date" class="form-control" th:value="${#dates.format(#calendars.createToday(), 'yyyy-MM-dd')}" readonly/>
+                    </div>
+                </div>
 
-        <div class="botones" style="margin-bottom: 1rem;">
-            <a href="/timbrados/nuevo" class="btn btn-nuevo">➕ Nuevo</a>
+                <hr>
+
+                <!-- Tabla de Detalles -->
+                <h5 class="mb-3">Detalles de Productos</h5>
+                <table class="table table-bordered" id="tablaDetalles">
+                    <thead class="table-light">
+                        <tr>
+                            <th width="40%">Producto</th>
+                            <th width="15%">Cantidad</th>
+                            <th width="20%">Precio Unitario</th>
+                            <th width="15%">Subtotal</th>
+                            <th width="10%">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody id="bodyDetalles">
+                        <!-- Filas se agregan con JavaScript -->
+                    </tbody>
+                </table>
+
+                <button type="button" class="btn btn-success mb-3" onclick="agregarFila()">
+                    <i class="fas fa-plus"></i> Agregar Producto
+                </button>
+
+                <!-- Total -->
+                <div class="row">
+                    <div class="col-md-6 offset-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text fw-bold">Total Compra</span>
+                            <input type="text" id="totalGeneral" class="form-control text-end fw-bold" readonly value="0.00"/>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary btn-lg">
+                        <i class="fas fa-save"></i> Registrar Compra
+                    </button>
+                    <a th:href="@{/compras}" class="btn btn-secondary btn-lg">Cancelar</a>
+                </div>
+            </form>
         </div>
-
-        <!-- Buscador -->
-        <form th:action="@{/timbrados}" method="get" class="buscador">
-            <input type="text" name="filtro" placeholder="Buscar..."
-                th:value="${filtro}" />
-            <button type="submit" class="btn-buscar">🔍 Buscar</button>
-            <a href="/timbrados" class="btn-buscar" style="background:#95a5a6;">🧹 Limpiar</a>
-        </form>
-
-        <table>
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>N° Timbrado</th>
-                    <th>Vigencia</th>
-					<th>N° inicial del documento </th>
-                    <th>Estado</th>
-					<th>N° final del documento </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:if="${#lists.isEmpty(timbrados)}">
-                    <td colspan="5" class="sin-datos">No hay timbrados registrados.</td>
-                </tr>
-                <tr th:each="tim : ${timbrados}">
-                    <td th:text="${tim.idTimbrado}"></td>
-                    <td th:text="${tim.numeroTimbrado}"></td>
-                   <td th:text="${#temporals.format(tim.inicioVigencia, 'dd/MM/yyyy') + ' al ' + #temporals.format(tim.finVigencia, 'dd/MM/yyyy')}"></td>
-					<td th:text="${tim.inicioDoc}"></td>
-                    <td th:text="${tim.estado ? 'Activo' : 'Inactivo'}"></td>
-					<td th:text="${tim.finalDoc}"></td>
-                    <td class="acciones">
-                        <a th:href="@{/timbrados/editar/{id}(id=${tim.idTimbrado})}" class="btn-editar">✍🏻Editar</a>
-                        <a th:href="@{/timbrados/eliminar/{id}(id=${tim.idTimbrado})}" class="btn-eliminar"
-                            onclick="return confirm('¿Confirma eliminar este Registro?')">🚮Eliminar</a>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
     </div>
+</div>
 
-   
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    let filaIndex = 0;
+
+    function agregarFila() {
+        const tbody = document.getElementById('bodyDetalles');
+
+        const fila = document.createElement('tr');
+        fila.id = `fila-${filaIndex}`;
+
+        fila.innerHTML = `
+            <td>
+                <select class="form-select" name="detalles[${filaIndex}].productoId" onchange="calcularSubtotal(${filaIndex})" required>
+                    <option value="">Seleccione producto...</option>
+                    <option th:each="prod : ${productos}" th:value="${prod.idProducto}" th:text="${prod.descripcion}"></option>
+                </select>
+            </td>
+            <td>
+                <input type="number" class="form-control text-center" 
+                       name="detalles[${filaIndex}].cantidad" 
+                       step="0.01" min="0.01" value="1" 
+                       onchange="calcularSubtotal(${filaIndex})" required>
+            </td>
+            <td>
+                <input type="number" class="form-control text-end" 
+                       name="detalles[${filaIndex}].precioUnitario" 
+                       step="0.01" min="0" value="0"
+                       onchange="calcularSubtotal(${filaIndex})" required>
+            </td>
+            <td>
+                <input type="text" class="form-control text-end fw-bold" id="subtotal-${filaIndex}" readonly value="0.00">
+            </td>
+            <td class="text-center">
+                <button type="button" class="btn btn-danger btn-sm" onclick="eliminarFila(${filaIndex})">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </td>
+        `;
+
+        tbody.appendChild(fila);
+        filaIndex++;
+    }
+
+    function eliminarFila(index) {
+        const fila = document.getElementById(`fila-${index}`);
+        if (fila) fila.remove();
+        calcularTotalGeneral();
+    }
+
+    function calcularSubtotal(index) {
+        const cantidad = parseFloat(document.querySelector(`[name="detalles[${index}].cantidad"]`).value) || 0;
+        const precio = parseFloat(document.querySelector(`[name="detalles[${index}].precioUnitario"]`).value) || 0;
+        const subtotal = cantidad * precio;
+
+        document.getElementById(`subtotal-${index}`).value = subtotal.toFixed(2);
+        calcularTotalGeneral();
+    }
+
+    function calcularTotalGeneral() {
+        let total = 0;
+        document.querySelectorAll('input[id^="subtotal-"]').forEach(input => {
+            total += parseFloat(input.value) || 0;
+        });
+        document.getElementById('totalGeneral').value = total.toFixed(2);
+    }
+
+    // Agregar una fila por defecto al cargar
+    window.onload = function() {
+        agregarFila();
+    };
+</script>
 </body>
-
 </html>
