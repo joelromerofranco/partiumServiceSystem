@@ -271,42 +271,42 @@ tbody tr:nth-child(even):hover {
     table {
         font-size: .78rem;
     }
-	
-	     .detail-card {
-	         margin-top: 20px;
-	         border-top: 2px solid #3498db;
-	         padding-top: 20px;
-	     }
+}
 
-	     .table-container {
-	         margin-top: 20px;
-	         overflow-x: auto;
-	     }
+.detail-card {
+    margin-top: 20px;
+    border-top: 2px solid #3498db;
+    padding-top: 20px;
+}
 
-	     .total-section {
-	         display: flex;
-	         justify-content: flex-end;
-	         gap: 20px;
-	         margin-top: 20px;
-	         font-weight: bold;
-	         font-size: 1.2rem;
-	     }
+.table-container {
+    margin-top: 20px;
+    overflow-x: auto;
+}
 
-	     .btn-add {
-	         background-color: #27ae60;
-	         color: white;
-	         padding: 8px 15px;
-	         border-radius: 4px;
-	         cursor: pointer;
-	         border: none;
-	     }
+.total-section {
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
 
-	     .btn-remove {
-	         background-color: #e74c3c;
-	         color: white;
-	         padding: 5px 10px;
-	         border-radius: 4px;
-	         cursor: pointer;
-	         text-decoration: none;
-	     
-}}
+.btn-add {
+    background-color: #27ae60;
+    color: white;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: none;
+}
+
+.btn-remove {
+    background-color: #e74c3c;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: none;
+}

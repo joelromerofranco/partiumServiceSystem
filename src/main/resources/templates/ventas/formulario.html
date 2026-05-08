@@ -63,13 +63,7 @@
                         <option value="CREDITO">Crédito</option>
                     </select>
                 </div>
-				<div class="field">
-				               <label for="estado">Estado</label>
-				                  <select id="estado" th:field="*{estado}" required class="select2">
-				                      <option value="true">Presupuesto</option>
-				                      <option value="false">Venta</option>
-				                  </select>
-				</div>
+
             </div>
 
             <!-- DETALLE (SELECTOR DE PRODUCTOS) -->
@@ -91,12 +85,12 @@
                         <input type="number" id="item-cantidad" value="1" min="1" />
                     </div>
 					
-                    <div class="field col-2">
+                    <div class="field">
                         <label>Precio Unitario</label>
-                        <input type="text" id="item-precio" readonly />
+                        <input type="text" id="item-precio" readonly style="background-color: #f8f9fa;" />
                     </div>
-                    <div class="field" style="justify-content: flex-end;">
-                        <button type="button" class="btn-add" id="btn-agregar-item">➕ Agregar</button>
+                    <div class="field" style="display: flex; align-items: flex-end;">
+                        <button type="button" class="btn btn-nuevo" id="btn-agregar-item" style="width: 100%; margin-bottom: 5px;">➕ Agregar</button>
                     </div>
                 </div>
             </div>

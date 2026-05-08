@@ -38,7 +38,7 @@ public class VentaController {
     private Venta crearVentaVacia() {
         Venta v = new Venta();
         v.setFecha(LocalDateTime.now());
-        v.setEstado("true");
+        v.setEstado("PRESUPUESTO");
         v.setCliente(new Cliente());
         v.setFuncionario(new Funcionario());
         v.setTotal(0.0);

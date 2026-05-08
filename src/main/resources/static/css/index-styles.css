@@ -266,3 +266,17 @@ body {
 .btn-card:hover {
     background-color: #006699;
 }
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+/* Si solo quieres afectar a ese logo específico */
+.logo-principal {
+    width: 100%;
+    max-width: 1200px; /* Máximo en pantallas grandes */
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}

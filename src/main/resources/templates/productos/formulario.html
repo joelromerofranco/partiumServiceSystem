@@ -91,8 +91,7 @@
             </div>
 
             <div class="botones">
-                <button type="submit" class="btn-guardar"
-                    th:text="${producto.idProducto != 0} ? '✏ Editar' : '💾 Guardar'">💾 Guardar</button>
+                <button type="submit" class="btn-guardar">💾 Guardar</button>
                 <a href="/productos" class="btn btn-cancelar">✖ Cancelar</a>
             </div>
 
@@ -103,16 +102,11 @@
     <div class="card" th:if="${!mostrarFormulario}">
         <h2>Listado de Productos</h2>
 
-        <div class="botones" style="margin-bottom: 1rem;">
-            <a href="/productos/nuevo" class="btn btn-nuevo">➕ Nuevo</a>
-        </div>
-
         <!-- Buscador -->
         <form th:action="@{/productos}" method="get" class="buscador">
-            <input type="text" name="filtro" placeholder="Buscar por sigla o descripción..."
-                th:value="${filtro}" />
+            <input type="text" name="filtro" placeholder="Buscar por sigla o descripción..." />
             <button type="submit" class="btn-buscar">🔍 Buscar</button>
-            <a href="/productos" class="btn-buscar" style="background:#95a5a6;">🧹 Limpiar</a>
+            <a href="/productos/nuevo" class="btn btn-nuevo">➕ Nuevo</a>
         </form>
 
         <table>

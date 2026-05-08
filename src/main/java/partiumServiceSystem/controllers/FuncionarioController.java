@@ -35,6 +35,7 @@ public class FuncionarioController {
             recuperarTodo(model);
         }
         model.addAttribute("filtro", filtro);
+        model.addAttribute("mostrarFormulario", false);
         return "funcionarios/formulario";
     }
 
@@ -55,6 +56,7 @@ public class FuncionarioController {
     public String nuevo(Model model) {
         model.addAttribute("funcionario", new Funcionario());
         recuperarTodo(model);
+        model.addAttribute("mostrarFormulario", true);
         return "funcionarios/formulario";
     }
 
@@ -67,6 +69,7 @@ public class FuncionarioController {
         }
         model.addAttribute("funcionario", funcionario);
         recuperarTodo(model);
+        model.addAttribute("mostrarFormulario", true);
         return "funcionarios/formulario";
     }
 
